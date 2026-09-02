@@ -274,6 +274,40 @@ Sensor config: ±16 g (fall impacts exceed 8 g and a clipped peak is unrecoverab
 
 ---
 
+## 7a. Kaggle operating rules (non-negotiable)
+
+These come from how this Kaggle account actually behaves, not from the PDF. They are
+enforced in `scripts/run_kernel.py` rather than left to discipline, because every one
+of them is the kind of rule that gets forgotten at 2 a.m. on fold 34.
+
+| # | Rule | Enforcement |
+|---|---|---|
+| **K1** | **Every kernel requests T4 × 2.** Other accelerator selections crash this account's sessions. | `kernel-metadata.json` must carry `"enable_gpu": true` and `"machine_shape": "NvidiaTeslaT4"`; the runner also passes `--accelerator NvidiaTeslaT4` on push, then **reads the metadata back from Kaggle** and aborts if the request was not honoured. |
+| **K2** | **One notebook at a time. Never train two concurrently.** Concurrent sessions exhaust the account's resources and fail together, losing both runs. | `.kaggle_run.lock` — a second invocation exits rather than pushing. |
+| **K3** | **Any notebook that errors halts the pipeline immediately.** Nothing downstream runs on a broken upstream artifact. | Non-`complete` terminal state → dump the kernel log, return non-zero, skip every remaining notebook and say which were skipped. |
+
+Consequence for K2: the experiment schedule is strictly serial —
+`nb01 → nb02 → nb03 → nb04 → nb05 → nb06`. The ~17 GPU-hour budget is wall-clock time,
+not something to be compressed by fanning out. This is affordable: the budget is
+roughly half of one week's 30-hour quota.
+
+Consequence for K3: per-fold CSV appends and `--start-fold` (PDF §7.2) matter more, not
+less. A halt at fold 34 of 38 must cost one fold, not the run.
+
+Two caveats worth stating plainly rather than discovering later:
+
+- The Kaggle CLI exposes no `kernels cancel` verb, so a run that has already started
+  **cannot be killed from the command line**. What the tooling guarantees is that a
+  failed or hung kernel stops the pipeline and never has a successor pushed alongside
+  it; killing a still-billing session requires the web UI.
+- An `"accelerator"` key in `kernel-metadata.json` is **silently dropped** by the CLI —
+  the kernel then runs on a single P100 while the local file still says otherwise. The
+  field Kaggle actually reads is `machine_shape`. This was caught in practice on nb00,
+  which is why K1 now verifies by reading the stored metadata back rather than trusting
+  the local copy.
+
+---
+
 ## 8. Automation
 
 The whole pipeline is driven from the laptop; nothing is clicked in a browser.
@@ -282,16 +316,23 @@ The whole pipeline is driven from the laptop; nothing is clicked in a browser.
 make sync        # src/fdlib -> Kaggle Dataset (new version), records the version hash
 make probe       # nb00
 make preprocess  # nb01 -> cached windows dataset
-make e1 e2 e3 e5 # push kernel, poll to completion, pull output/ into results/
+make e1 e2 e3 e5 # one at a time, in this order (rule K2)
 make export      # nb06 -> model.tflite, model.h
 make tables      # results/*.csv -> paper/table_I..IV.md
 make firmware    # compile the ESP32 sketch
 ```
 
 `scripts/run_kernel.py` handles push → poll (`kaggle kernels status`) → pull
-(`kaggle kernels output`), retries on transient failure, and writes a line to
+(`kaggle kernels output`), enforces rules K1–K3 above, and writes a line to
 `results/experiment_log.csv`: date, notebook, fdlib version, git commit, config hash, result.
 That log is the answer when a reviewer asks how a number was produced.
+
+Passing several notebooks in one invocation runs them **sequentially**, stopping at the
+first failure:
+
+```
+python scripts/run_kernel.py nb02_e1 nb03_e2 nb04_e3 nb05_e5 nb06_export
+```
 
 **Budget-protecting rules carried over from PDF §7.2:** results are appended to CSV after
 *every fold*, not at the end; every training entry point accepts `--start-fold` so a killed
