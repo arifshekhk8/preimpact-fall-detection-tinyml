@@ -1,0 +1,145 @@
+% References for "Pre-Impact Fall Detection on a Low-Cost Microcontroller".
+%
+% Using the SisFall Enhanced annotations obliges citing BOTH the original recordings
+% (Sucerquia 2017) AND the annotation work (Musci 2018/2020). Citing only one is the
+% kind of omission that makes reviewers doubt everything else in a paper.
+
+@article{sucerquia2017sisfall,
+  author  = {Sucerquia, Angela and L{\'o}pez, Jos{\'e} David and Vargas-Bonilla, Jes{\'u}s Francisco},
+  title   = {{SisFall}: A Fall and Movement Dataset},
+  journal = {Sensors},
+  volume  = {17},
+  number  = {1},
+  pages   = {198},
+  year    = {2017},
+  doi     = {10.3390/s17010198}
+}
+
+@article{musci2018online,
+  author  = {Musci, Mirto and De Martini, Daniele and Blago, Nicola and Facchinetti, Tullio and Piastra, Marco},
+  title   = {Online Fall Detection using Recurrent Neural Networks},
+  journal = {arXiv preprint arXiv:1804.04976},
+  year    = {2018}
+}
+
+@article{musci2020online,
+  author  = {Musci, Mirto and De Martini, Daniele and Blago, Nicola and Facchinetti, Tullio and Piastra, Marco},
+  title   = {Online Fall Detection Using Recurrent Neural Networks on Smart Wearable Devices},
+  journal = {IEEE Transactions on Emerging Topics in Computing},
+  volume  = {9},
+  number  = {3},
+  pages   = {1276--1289},
+  year    = {2020},
+  doi     = {10.1109/TETC.2020.3027454},
+  note    = {Source of the SisFall Enhanced three-class per-sample annotations. Mandatory citation when those labels are used.}
+}
+
+@article{yu2021kfall,
+  author  = {Yu, Xiaoqun and Jang, Jaehyuk and Xiong, Shuping},
+  title   = {A Large-Scale Open Motion Dataset ({KFall}) and Benchmark Algorithms for Detecting Pre-impact Fall of the Elderly Using Wearable Inertial Sensors},
+  journal = {Frontiers in Aging Neuroscience},
+  volume  = {13},
+  pages   = {692865},
+  year    = {2021},
+  doi     = {10.3389/fnagi.2021.692865},
+  note    = {Temporal fall-onset and impact labels derived from synchronised video; the primary pre-impact label source in this work.}
+}
+
+@article{saleh2020fallalld,
+  author  = {Saleh, Majd and Abbas, Manuel and Le Bouquin Jeann{\`e}s, R{\'e}gine},
+  title   = {{FallAllD}: An Open Dataset of Human Falls and Activities of Daily Living for Classical and Deep Learning Applications},
+  journal = {IEEE Sensors Journal},
+  volume  = {21},
+  number  = {2},
+  pages   = {1849--1858},
+  year    = {2020},
+  doi     = {10.1109/JSEN.2020.3018465}
+}
+
+@article{casilari2017umafall,
+  author  = {Casilari, Eduardo and Santoyo-Ram{\'o}n, Jos{\'e} Antonio and Cano-Garc{\'i}a, Jos{\'e} Manuel},
+  title   = {{UMAFall}: A Multisensor Dataset for the Research on Automatic Fall Detection},
+  journal = {Procedia Computer Science},
+  volume  = {110},
+  pages   = {32--39},
+  year    = {2017},
+  doi     = {10.1016/j.procs.2017.06.110}
+}
+
+@article{casilari2020study,
+  author  = {Casilari, Eduardo and Lora-Rivera, Ra{\'u}l and Garc{\'i}a-Lagos, Francisco},
+  title   = {A Study on the Application of Convolutional Neural Networks to Fall Detection Evaluated with Multiple Public Datasets},
+  journal = {Sensors},
+  volume  = {20},
+  number  = {5},
+  pages   = {1466},
+  year    = {2020},
+  doi     = {10.3390/s20051466},
+  note    = {Cross-dataset degradation evidence underpinning contribution C1.}
+}
+
+@article{tinyfallnet2023,
+  author  = {Kim, Bummo and Kim, Sung-Woo and Lee, Kyubin and Ko, Kyungwoo and Sim, Yun-Kyung},
+  title   = {{TinyFallNet}: A Lightweight Pre-Impact Fall Detection Model},
+  journal = {Sensors},
+  volume  = {23},
+  number  = {20},
+  pages   = {8459},
+  year    = {2023},
+  doi     = {10.3390/s23208459},
+  note    = {Closest prior work on contributions C2 and C3.}
+}
+
+@article{torti2019embedding,
+  author  = {Torti, Emanuele and Fontanella, Alessandro and Musci, Mirto and Blago, Nicola and Pau, Danilo and Leporati, Francesco and Piastra, Marco},
+  title   = {Embedding Recurrent Neural Networks in Wearable Systems for Real-Time Fall Detection},
+  journal = {Microprocessors and Microsystems},
+  volume  = {71},
+  pages   = {102895},
+  year    = {2019},
+  doi     = {10.1016/j.micpro.2019.102895},
+  note    = {Same group as the Enhanced annotations, deployed to a microcontroller; the closest deployment baseline.}
+}
+
+@article{sampling2025rate,
+  author  = {Lora-Rivera, Ra{\'u}l and Luque-Moreno, {\'A}ngel and Casilari, Eduardo},
+  title   = {The Impact of the Accelerometer Sampling Rate on the Performance of Machine and Deep Learning Models in Wearable Fall-Detection Systems},
+  journal = {Sensors},
+  year    = {2025},
+  note    = {Supports the sampling-rate ablation in E5.}
+}
+
+@inproceedings{ganin2015dann,
+  author    = {Ganin, Yaroslav and Lempitsky, Victor},
+  title     = {Unsupervised Domain Adaptation by Backpropagation},
+  booktitle = {Proceedings of the 32nd International Conference on Machine Learning (ICML)},
+  pages     = {1180--1189},
+  year      = {2015}
+}
+
+@inproceedings{sun2016coral,
+  author    = {Sun, Baochen and Saenko, Kate},
+  title     = {Deep {CORAL}: Correlation Alignment for Deep Domain Adaptation},
+  booktitle = {European Conference on Computer Vision (ECCV) Workshops},
+  pages     = {443--450},
+  year      = {2016},
+  doi       = {10.1007/978-3-319-49409-8_35}
+}
+
+@inproceedings{chollet2017xception,
+  author    = {Chollet, Fran{\c c}ois},
+  title     = {Xception: Deep Learning with Depthwise Separable Convolutions},
+  booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1251--1258},
+  year      = {2017},
+  note      = {Separable convolutions, the parameter-budget mechanism used here.}
+}
+
+@article{david2021tflitemicro,
+  author  = {David, Robert and Duke, Jared and Jain, Advait and Janapa Reddi, Vijay and Jeffries, Nat and Li, Jian and Kreeger, Nick and Nappier, Ian and Natraj, Meghna and Regev, Shlomi and Rhodes, Rocky and Wang, Tiezhen and Warden, Pete},
+  title   = {{TensorFlow Lite Micro}: Embedded Machine Learning for {TinyML} Systems},
+  journal = {Proceedings of Machine Learning and Systems},
+  volume  = {3},
+  pages   = {800--811},
+  year    = {2021}
+}
