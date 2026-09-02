@@ -1,0 +1,192 @@
+{
+  "sisfall": {
+    "n_trials": 3691,
+    "resting_mag_g": 1.011,
+    "resting_mag_ok": true,
+    "gravity_axis": 1,
+    "gravity_axis_votes": [
+      6,
+      187,
+      7
+    ],
+    "gravity_sign": -0.964428573846817,
+    "gyro_abs_mean_dps": 19.138,
+    "gyro_p99_dps": 129.98,
+    "peak_fall_g": 4.759,
+    "peak_adl_g": 1.882,
+    "fall_peak_exceeds_adl": true,
+    "status": "OK",
+    "gravity_axis_after": 1,
+    "gravity_sign_after": -0.964,
+    "axis_canonical": true,
+    "gyro_nonzero_fraction": 1.0
+  },
+  "kfall": {
+    "n_trials": 5075,
+    "resting_mag_g": 1.0013,
+    "resting_mag_ok": true,
+    "gravity_axis": 1,
+    "gravity_axis_votes": [
+      1,
+      194,
+      5
+    ],
+    "gravity_sign": -0.9629627764225006,
+    "gyro_abs_mean_dps": 13.134,
+    "gyro_p99_dps": 128.21,
+    "peak_fall_g": 4.371,
+    "peak_adl_g": 1.877,
+    "fall_peak_exceeds_adl": true,
+    "status": "OK",
+    "gravity_axis_after": 1,
+    "gravity_sign_after": -0.963,
+    "axis_canonical": true,
+    "gyro_nonzero_fraction": 1.0
+  },
+  "fallalld": {
+    "n_trials": 1798,
+    "resting_mag_g": 0.9881,
+    "resting_mag_ok": true,
+    "gravity_axis": 0,
+    "gravity_axis_votes": [
+      189,
+      7,
+      4
+    ],
+    "gravity_sign": 0.9284465909004211,
+    "gyro_abs_mean_dps": 12.236,
+    "gyro_p99_dps": 89.63,
+    "peak_fall_g": 4.159,
+    "peak_adl_g": 1.695,
+    "fall_peak_exceeds_adl": true,
+    "status": "OK",
+    "gravity_axis_after": 1,
+    "gravity_sign_after": -0.928,
+    "axis_canonical": true,
+    "gyro_nonzero_fraction": 1.0
+  },
+  "umafall": {
+    "n_trials": 577,
+    "resting_mag_g": 0.9883,
+    "resting_mag_ok": true,
+    "gravity_axis": 1,
+    "gravity_axis_votes": [
+      2,
+      198,
+      0
+    ],
+    "gravity_sign": 0.8753665387630463,
+    "gyro_abs_mean_dps": 0.0,
+    "gyro_p99_dps": 0.0,
+    "peak_fall_g": 3.666,
+    "peak_adl_g": 1.823,
+    "fall_peak_exceeds_adl": true,
+    "status": "OK",
+    "gravity_axis_after": 1,
+    "gravity_sign_after": -0.875,
+    "axis_canonical": true,
+    "gyro_nonzero_fraction": 0.0
+  },
+  "_gravity_before": {
+    "axis": {
+      "sisfall": 1,
+      "kfall": 1,
+      "fallalld": 0,
+      "umafall": 1
+    },
+    "sign": {
+      "sisfall": -1,
+      "kfall": -1,
+      "fallalld": 1,
+      "umafall": 1
+    }
+  },
+  "_gravity_after": {
+    "sisfall": {
+      "axis": 1,
+      "sign": -0.964
+    },
+    "kfall": {
+      "axis": 1,
+      "sign": -0.963
+    },
+    "fallalld": {
+      "axis": 1,
+      "sign": -0.928
+    },
+    "umafall": {
+      "axis": 1,
+      "sign": -0.875
+    }
+  },
+  "_rotations": {
+    "sisfall": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "kfall": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "fallalld": [
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "umafall": [
+      [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      [
+        -0.0,
+        -1.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  }
+}

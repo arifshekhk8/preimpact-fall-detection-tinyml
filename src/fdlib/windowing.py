@@ -17,6 +17,10 @@ import numpy as np
 
 from . import config as C
 
+# How long after the impact frame still counts as the FALL class, in seconds.
+# One window's worth: the event, not the aftermath.
+FALL_EVENT_SEC = C.WINDOW_SEC
+
 
 @dataclass
 class Trial:
@@ -84,7 +88,14 @@ def window_trial(
             a, b = trial.alert_span
             labels[(right >= a) & (right < b)] = C.ALERT
         if trial.impact_idx is not None:
-            labels[right >= trial.impact_idx] = C.FALL
+            # FALL is the impact EVENT, not everything that follows it. Marking every
+            # window to the end of the trial as FALL inflates the class enormously --
+            # a 20 s FallAllD trial with a 10 s impact would be half "fall" -- and
+            # makes the task look far easier than detecting a fall actually is.
+            # The window is the fall event itself, matching how the three-class
+            # annotations this task imitates are defined.
+            end = trial.impact_idx + int(round(FALL_EVENT_SEC * C.TARGET_HZ))
+            labels[(right >= trial.impact_idx) & (right <= end)] = C.FALL
     else:
         raise ValueError(f"unknown task {task!r}")
 

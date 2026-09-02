@@ -129,6 +129,55 @@ def gravity_axis(sig: np.ndarray) -> tuple[int, float, float]:
     return axis, float(mean[axis]), float(np.linalg.norm(sig[:, 0:3], axis=1).mean())
 
 
+# The convention every dataset is rotated onto: gravity resting on axis 1 (Y),
+# negative. Chosen because SisFall and KFall already use it, so the two largest
+# corpora are left untouched and only the smaller ones are transformed.
+CANONICAL_AXIS = 1
+CANONICAL_SIGN = -1.0
+
+
+def canonical_rotation(axis: int, sign: float,
+                       target_axis: int = CANONICAL_AXIS,
+                       target_sign: float = CANONICAL_SIGN) -> np.ndarray:
+    """Signed permutation matrix mapping a dataset's gravity axis onto the canonical one.
+
+    nb01 measured that FallAllD rests gravity on axis 0 positive while SisFall and
+    KFall rest it on axis 1 negative, and UMAFall on axis 1 positive. Left alone, that
+    difference is indistinguishable from a genuine domain shift -- a model would appear
+    to fail at cross-dataset transfer when it was really just handed an upside-down
+    sensor. This is the single correction that has to happen before any C1 number means
+    anything.
+
+    The result is restricted to rotations (determinant +1) rather than arbitrary
+    reflections: a reflection would flip the handedness of the coordinate frame and
+    silently invert the sense of every gyroscope channel.
+    """
+    src_sign = 1.0 if sign >= 0 else -1.0
+    tgt_sign = 1.0 if target_sign >= 0 else -1.0
+
+    perm = list(range(3))
+    perm[target_axis], perm[axis] = perm[axis], perm[target_axis]
+
+    R = np.zeros((3, 3), dtype=np.float64)
+    for out_i, in_i in enumerate(perm):
+        R[out_i, in_i] = 1.0
+    R[target_axis] *= tgt_sign * src_sign
+
+    if np.linalg.det(R) < 0:
+        # restore right-handedness by flipping an axis that is not the gravity axis
+        other = next(i for i in range(3) if i != target_axis)
+        R[other] *= -1.0
+    return R
+
+
+def measure_rotation(signals: list[np.ndarray]) -> np.ndarray:
+    """Derive a dataset's correction from its own resting trials."""
+    votes = [gravity_axis(s) for s in signals]
+    axis = int(np.bincount([v[0] for v in votes], minlength=3).argmax())
+    sign = float(np.median([v[1] for v in votes]))
+    return canonical_rotation(axis, sign)
+
+
 # ---------------------------------------------------------- step 6: normalisation
 
 @dataclass
