@@ -27,7 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src" / "fdlib"
-SLUG = "arifshekh/fdlib"
+SLUG = "arifshekh/fdlib-preimpact-fall"
 
 
 def content_hash(pkg: Path) -> str:
@@ -62,7 +62,8 @@ def main() -> int:
         (stage / "VERSION.json").write_text(json.dumps(
             {"content_hash": digest, "package": "fdlib"}, indent=2))
         (stage / "dataset-metadata.json").write_text(json.dumps(
-            {"title": "fdlib", "id": SLUG, "licenses": [{"name": "CC0-1.0"}]}, indent=2))
+            {"title": "fdlib (pre-impact fall detection library)",
+             "id": SLUG, "licenses": [{"name": "CC0-1.0"}]}, indent=2))
 
         code, out = sh(["kaggle", "datasets", "status", SLUG])
         exists = "ready" in out.lower() or "error" not in out.lower() and code == 0

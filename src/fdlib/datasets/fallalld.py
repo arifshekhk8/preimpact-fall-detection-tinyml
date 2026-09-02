@@ -20,6 +20,7 @@ actually confirms this -- if the constant were wrong, resting |a| would not sit 
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import numpy as np
@@ -33,31 +34,40 @@ NATIVE_HZ = C.NATIVE_HZ["fallalld"]
 ACC_SCALE = 8.0 / 32768.0      # +/-8 g, 16-bit signed
 GYR_SCALE = 2000.0 / 32768.0   # +/-2000 dps, 16-bit signed
 
-# FallAllD numbers falls from 101 upward and ADLs from 1; the release's activity_info
-# table is authoritative and is read when present, with this as the documented fallback.
-FALL_ID_MIN = 101
+# nb00 confirmed `activity_info.pkl` is a plain {id: description} dict, not a table.
+# Fall activities are therefore identified from their descriptions.
+#
+# The 'fail' exclusion is not paranoia: FallAllD's activity 15 is "Fail to stand up",
+# which a naive substring match on 'fal' would label a fall. It is an ADL.
+_FALL_RE = re.compile(r"\bfall", re.I)
+_NOT_FALL_RE = re.compile(r"fail", re.I)
 
 
 def _fall_ids(root: Path) -> set[int] | None:
     info_path = root / "activity_info.pkl"
     if not info_path.exists():
+        info_path = next(iter(sorted(root.rglob("activity_info.pkl"))), None)
+    if info_path is None or not info_path.exists():
         return None
     try:
         info = pd.read_pickle(info_path)
     except Exception:  # noqa: BLE001
         return None
-    if not isinstance(info, pd.DataFrame):
+
+    if isinstance(info, dict):
+        items = info.items()
+    elif isinstance(info, pd.DataFrame):
+        id_col = next((c for c in info.columns if "id" in c.lower()), None)
+        desc_col = next((c for c in info.columns
+                         if any(k in c.lower() for k in ("desc", "name", "activity", "type"))), None)
+        if id_col is None or desc_col is None:
+            return None
+        items = zip(info[id_col].tolist(), info[desc_col].tolist())
+    else:
         return None
-    id_col = next((c for c in info.columns if "id" in c.lower()), None)
-    kind_col = next(
-        (c for c in info.columns
-         if any(k in c.lower() for k in ("type", "class", "category", "activity", "name", "desc"))),
-        None,
-    )
-    if id_col is None or kind_col is None:
-        return None
-    mask = info[kind_col].astype(str).str.contains("fall", case=False, na=False)
-    ids = set(int(v) for v in info.loc[mask, id_col].tolist())
+
+    ids = {int(k) for k, v in items
+           if _FALL_RE.search(str(v)) and not _NOT_FALL_RE.search(str(v))}
     return ids or None
 
 
@@ -89,7 +99,13 @@ def load(root: str | Path, target_hz: int = C.TARGET_HZ,
             continue
 
         aid = int(row["ActivityID"])
-        is_fall = (aid in fall_ids) if fall_ids is not None else (aid >= FALL_ID_MIN)
+        if fall_ids is None:
+            raise RuntimeError(
+                "cannot determine which FallAllD activities are falls: activity_info.pkl "
+                "is missing or unreadable. Refusing to guess -- a wrong fall/ADL split "
+                "would silently corrupt every metric."
+            )
+        is_fall = aid in fall_ids
         # FallAllD ships no temporal labels, so the impact is the acceleration peak --
         # the same documented proxy used for SisFall. FallAllD is a generalisation test,
         # not a lead-time source, so this proxy never feeds a C2 number.

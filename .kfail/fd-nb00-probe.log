@@ -1,0 +1,215 @@
+[{"stream_name":"stdout","time":4.6375741139999995,"data":"\n"}
+,{"stream_name":"stdout","time":4.638428644,"data":"==============================================================================\n"}
+,{"stream_name":"stdout","time":4.638451652,"data":"Q2. UMAFall -- fall trials, sensor positions, and measured rates\n"}
+,{"stream_name":"stdout","time":4.638457218,"data":"==============================================================================\n"}
+,{"stream_name":"stdout","time":5.452691937,"data":"  csv files: 746\n"}
+,{"stream_name":"stdout","time":5.454304903,"data":"  trial kinds (case-insensitive): {'ADL': 538, 'FALL': 208}\n"}
+,{"stream_name":"stdout","time":5.455454078,"data":"  FALL trials: 208   examples: ['UMAFall_Subject_02_Fall_backwardFall_1_2016-06-13_20-51-32.csv', 'UMAFall_Subject_02_Fall_backwardFall_2_2016-06-13_20-52-16.csv', 'UMAFall_Subject_02_Fall_backwardFall_3_2016-06-13_20-52-55.csv']\n"}
+,{"stream_name":"stdout","time":5.456137257,"data":"  fall activity names: ['backwardFall', 'forwardFall', 'lateralFall']\n"}
+,{"stream_name":"stdout","time":5.456153792,"data":"\n"}
+,{"stream_name":"stdout","time":5.456158712,"data":"  measured sampling rate per sensor position:\n"}
+,{"stream_name":"stdout","time":6.159716179,"data":"                                      file  sid         pos  n_acc  span_s    hz\n"}
+,{"stream_name":"stdout","time":6.159750142,"data":"UMAFall_Subject_01_ADL_Aplausing_1_2017-04    0 RIGHTPOCKET   2971   14.90 199.3\n"}
+,{"stream_name":"stdout","time":6.15976206,"data":"UMAFall_Subject_01_ADL_Aplausing_1_2017-04    1       CHEST    300   14.86  20.1\n"}
+,{"stream_name":"stdout","time":6.159765524,"data":"UMAFall_Subject_01_ADL_Aplausing_1_2017-04    2       WAIST    299   14.85  20.1\n"}
+,{"stream_name":"stdout","time":6.159768699,"data":"UMAFall_Subject_01_ADL_Aplausing_1_2017-04    3       WRIST    299   14.85  20.1\n"}
+,{"stream_name":"stdout","time":6.159771935,"data":"UMAFall_Subject_01_ADL_Aplausing_1_2017-04    4       ANKLE    299   14.85  20.1\n"}
+,{"stream_name":"stdout","time":6.159774947,"data":"UMAFall_Subject_01_ADL_Aplausing_2_2017-04    0 RIGHTPOCKET   2971   14.87 199.8\n"}
+,{"stream_name":"stdout","time":6.159777963,"data":"UMAFall_Subject_01_ADL_Aplausing_2_2017-04    1       CHEST    300   14.84  20.1\n"}
+,{"stream_name":"stdout","time":6.15978091,"data":"UMAFall_Subject_01_ADL_Aplausing_2_2017-04    2       WAIST    300   14.84  20.1\n"}
+,{"stream_name":"stdout","time":6.159783851,"data":"UMAFall_Subject_01_ADL_Aplausing_2_2017-04    3       WRIST    299   14.80  20.1\n"}
+,{"stream_name":"stdout","time":6.159786795,"data":"UMAFall_Subject_01_ADL_Aplausing_2_2017-04    4       ANKLE    300   14.85  20.1\n"}
+,{"stream_name":"stdout","time":6.159789811,"data":"UMAFall_Subject_01_ADL_Aplausing_3_2017-04    0 RIGHTPOCKET   2972   14.90 199.4\n"}
+,{"stream_name":"stdout","time":6.159792771,"data":"UMAFall_Subject_01_ADL_Aplausing_3_2017-04    1       CHEST    296   14.74  20.0\n"}
+,{"stream_name":"stdout","time":6.159795737,"data":"UMAFall_Subject_01_ADL_Aplausing_3_2017-04    2       WAIST    300   14.86  20.1\n"}
+,{"stream_name":"stdout","time":6.159798678,"data":"UMAFall_Subject_01_ADL_Aplausing_3_2017-04    3       WRIST    300   14.84  20.1\n"}
+,{"stream_name":"stdout","time":6.159801691,"data":"UMAFall_Subject_01_ADL_Aplausing_3_2017-04    4       ANKLE    299   14.84  20.1\n"}
+,{"stream_name":"stdout","time":6.159804632,"data":"UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1    0 RIGHTPOCKET   2970   14.89 199.4\n"}
+,{"stream_name":"stdout","time":6.15980758,"data":"UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1    1       CHEST    301   14.86  20.2\n"}
+,{"stream_name":"stdout","time":6.159810532,"data":"UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1    2       WAIST    300   14.97  20.0\n"}
+,{"stream_name":"stdout","time":6.159832192,"data":"UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1    3       WRIST    301   14.87  20.2\n"}
+,{"stream_name":"stdout","time":6.159835474,"data":"UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1    4       ANKLE    301   14.87  20.2\n"}
+,{"stream_name":"stdout","time":6.159838549,"data":"UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1    0 RIGHTPOCKET   2970   14.63 202.9\n"}
+,{"stream_name":"stdout","time":6.15984153,"data":"UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1    1       CHEST    300   14.61  20.5\n"}
+,{"stream_name":"stdout","time":6.159844468,"data":"UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1    2       WAIST    301   14.96  20.0\n"}
+,{"stream_name":"stdout","time":6.159847408,"data":"UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1    3       WRIST    300   14.62  20.5\n"}
+,{"stream_name":"stdout","time":6.159851343,"data":"UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1    4       ANKLE    300   14.62  20.5\n"}
+,{"stream_name":"stdout","time":6.159854422,"data":"UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1    0 RIGHTPOCKET   2971   14.92 199.0\n"}
+,{"stream_name":"stdout","time":6.159857406,"data":"UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1    1       CHEST    301   14.90  20.1\n"}
+,{"stream_name":"stdout","time":6.159860358,"data":"UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1    2       WAIST    300   14.90  20.1\n"}
+,{"stream_name":"stdout","time":6.159868286,"data":"UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1    3       WRIST    300   14.88  20.1\n"}
+,{"stream_name":"stdout","time":6.159871303,"data":"UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1    4       ANKLE    299   14.89  20.0\n"}
+,{"stream_name":"stdout","time":6.159874432,"data":"UMAFall_Subject_02_Fall_backwardFall_1_201    0 RIGHTPOCKET   2977   14.85 200.4\n"}
+,{"stream_name":"stdout","time":6.159877457,"data":"UMAFall_Subject_02_Fall_backwardFall_1_201    1       CHEST    300   14.98  20.0\n"}
+,{"stream_name":"stdout","time":6.159880388,"data":"UMAFall_Subject_02_Fall_backwardFall_1_201    2       WAIST    300   14.84  20.2\n"}
+,{"stream_name":"stdout","time":6.159883399,"data":"UMAFall_Subject_02_Fall_backwardFall_1_201    3       WRIST    299   14.81  20.1\n"}
+,{"stream_name":"stdout","time":6.159886339,"data":"UMAFall_Subject_02_Fall_backwardFall_1_201    4       ANKLE    298   14.75  20.1\n"}
+,{"stream_name":"stdout","time":6.159889274,"data":"UMAFall_Subject_02_Fall_backwardFall_2_201    0 RIGHTPOCKET   2978   14.91 199.7\n"}
+,{"stream_name":"stdout","time":6.159892227,"data":"UMAFall_Subject_02_Fall_backwardFall_2_201    1       CHEST    299   14.86  20.1\n"}
+,{"stream_name":"stdout","time":6.15989524,"data":"UMAFall_Subject_02_Fall_backwardFall_2_201    2       WAIST    299   14.85  20.1\n"}
+,{"stream_name":"stdout","time":6.1598981760000004,"data":"UMAFall_Subject_02_Fall_backwardFall_2_201    3       WRIST    300   14.88  20.1\n"}
+,{"stream_name":"stdout","time":6.159901107,"data":"UMAFall_Subject_02_Fall_backwardFall_2_201    4       ANKLE    299   14.84  20.1\n"}
+,{"stream_name":"stdout","time":6.159904037,"data":"UMAFall_Subject_02_Fall_backwardFall_3_201    0 RIGHTPOCKET   2977   14.64 203.3\n"}
+,{"stream_name":"stdout","time":6.159906982,"data":"UMAFall_Subject_02_Fall_backwardFall_3_201    1       CHEST    300   14.59  20.5\n"}
+,{"stream_name":"stdout","time":6.159909946,"data":"UMAFall_Subject_02_Fall_backwardFall_3_201    2       WAIST    300   14.63  20.4\n"}
+,{"stream_name":"stdout","time":6.159912875,"data":"UMAFall_Subject_02_Fall_backwardFall_3_201    3       WRIST    300   14.62  20.5\n"}
+,{"stream_name":"stdout","time":6.15991583,"data":"UMAFall_Subject_02_Fall_backwardFall_3_201    4       ANKLE    299   14.60  20.4\n"}
+,{"stream_name":"stdout","time":6.159921971,"data":"\n"}
+,{"stream_name":"stdout","time":6.15992502,"data":"==============================================================================\n"}
+,{"stream_name":"stdout","time":6.159928072,"data":"Q3. FallAllD -- which ActivityIDs are falls\n"}
+,{"stream_name":"stdout","time":6.159931113,"data":"==============================================================================\n"}
+,{"stream_name":"stdout","time":6.165279679,"data":"  activity_info type: dict, 135 entries\n"}
+,{"stream_name":"stdout","time":6.165318412,"data":"      1  Start clap hands\n"}
+,{"stream_name":"stdout","time":6.165324843,"data":"      2  Clap hands\n"}
+,{"stream_name":"stdout","time":6.165329871,"data":"      3  Stop clap hands\n"}
+,{"stream_name":"stdout","time":6.165334411,"data":"      4  Clap hands 1\n"}
+,{"stream_name":"stdout","time":6.16533939,"data":"      5  Start wave hands\n"}
+,{"stream_name":"stdout","time":6.165351222,"data":"      6  wave hands\n"}
+,{"stream_name":"stdout","time":6.165356,"data":"      7  Stop wave hands\n"}
+,{"stream_name":"stdout","time":6.165360246,"data":"      8  Raising hand up\n"}
+,{"stream_name":"stdout","time":6.165365035,"data":"      9  Moving hand down\n"}
+,{"stream_name":"stdout","time":6.165369577,"data":"     10  Move hand up -\u003e down\n"}
+,{"stream_name":"stdout","time":6.165374878,"data":"     11  Hand shaking\n"}
+,{"stream_name":"stdout","time":6.165379137,"data":"     12  Beating a table\n"}
+,{"stream_name":"stdout","time":6.165384154,"data":"     13  Sitting down\n"}
+,{"stream_name":"stdout","time":6.16538826,"data":"     14  Standing up\n"}
+,{"stream_name":"stdout","time":6.165393232,"data":"     15  Fail to stand up\n"}
+,{"stream_name":"stdout","time":6.165397863,"data":"     16  Lying down\n"}
+,{"stream_name":"stdout","time":6.165403084,"data":"     17  Turning while lying\n"}
+,{"stream_name":"stdout","time":6.165407491,"data":"     18  Rising up\n"}
+,{"stream_name":"stdout","time":6.165412163,"data":"     19  Start walking\n"}
+,{"stream_name":"stdout","time":6.165416257,"data":"     20  Walking slowly\n"}
+,{"stream_name":"stdout","time":6.165421219,"data":"     21  Stop walking\n"}
+,{"stream_name":"stdout","time":6.165425615,"data":"     22  Walking quickly\n"}
+,{"stream_name":"stdout","time":6.165430469,"data":"     23  Stumbling\n"}
+,{"stream_name":"stdout","time":6.165435012,"data":"     24  Jogging slowly\n"}
+,{"stream_name":"stdout","time":6.165439298,"data":"     25  Jogging quickly\n"}
+,{"stream_name":"stdout","time":6.165443183,"data":"     26  Jumping slightly\n"}
+,{"stream_name":"stdout","time":6.16544798,"data":"     27  Jumping strongly\n"}
+,{"stream_name":"stdout","time":6.165452237,"data":"     28  Bending down\n"}
+,{"stream_name":"stdout","time":6.165457094,"data":"     29  Start going upstairs\n"}
+,{"stream_name":"stdout","time":6.16546131,"data":"     30  Going upstairs\n"}
+,{"stream_name":"stdout","time":6.165466077,"data":"     31  Stop going upstairs\n"}
+,{"stream_name":"stdout","time":6.165470513,"data":"     32  Start going downstairs\n"}
+,{"stream_name":"stdout","time":6.165493152,"data":"     33  Going downstairs\n"}
+,{"stream_name":"stdout","time":6.165498232,"data":"     34  Stop going downstairs\n"}
+,{"stream_name":"stdout","time":6.165502674,"data":"     35  Upstairs quickly\n"}
+,{"stream_name":"stdout","time":6.165507569,"data":"     36  Downstairs quickly\n"}
+,{"stream_name":"stdout","time":6.165511935,"data":"     37  Start ascending, lift\n"}
+,{"stream_name":"stdout","time":6.165531267,"data":"     38  Stop ascending, lift\n"}
+,{"stream_name":"stdout","time":6.165536484,"data":"     39  Start descending, lift\n"}
+,{"stream_name":"stdout","time":6.1655408,"data":"     40  Stop descending, lift\n"}
+,{"stream_name":"stdout","time":6.165545642,"data":"     41  Standing, moving bus\n"}
+,{"stream_name":"stdout","time":6.165549805,"data":"     42  Sitting, moving bus\n"}
+,{"stream_name":"stdout","time":6.16555428,"data":"     43  Start jogging\n"}
+,{"stream_name":"stdout","time":6.165558707,"data":"     44  Stop jogging\n"}
+,{"stream_name":"stdout","time":6.165563017,"data":"     45  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165567496,"data":"     46  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165572184,"data":"     47  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165576622,"data":"     48  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16558162,"data":"     49  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165586057,"data":"     50  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165590561,"data":"     51  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165594886,"data":"     52  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165599232,"data":"     53  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165603763,"data":"     54  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165608321,"data":"     55  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165612984,"data":"     56  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165617743,"data":"     57  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165631673,"data":"     58  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165636807,"data":"     59  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165641104,"data":"     60  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165645972,"data":"     61  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165650403,"data":"     62  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165655098,"data":"     63  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165659454,"data":"     64  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165664131,"data":"     65  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165668606,"data":"     66  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165673288,"data":"     67  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16567823,"data":"     68  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16568274,"data":"     69  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165687206,"data":"     70  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165691643,"data":"     71  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165696346,"data":"     72  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165709725,"data":"     73  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165714523,"data":"     74  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165719027,"data":"     75  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165732714,"data":"     76  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.1657372,"data":"     77  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165741607,"data":"     78  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165746155,"data":"     79  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.1657555330000005,"data":"     80  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165760424,"data":"     81  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165776017,"data":"     82  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165781086,"data":"     83  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16578564,"data":"     84  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165790241,"data":"     85  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165794931,"data":"     86  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165799432,"data":"     87  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165803994,"data":"     88  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16581682,"data":"     89  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16582156,"data":"     90  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16582601,"data":"     91  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165830354,"data":"     92  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165834871,"data":"     93  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165847849,"data":"     94  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165852723,"data":"     95  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165857149,"data":"     96  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165873803,"data":"     97  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165878689,"data":"     98  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165883549,"data":"     99  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.16589636,"data":"    100  Unknown activity\n"}
+,{"stream_name":"stdout","time":6.165901147,"data":"    101  Fall F, walking, trip\n"}
+,{"stream_name":"stdout","time":6.165916163,"data":"    102  Fall F, walking, trip, rec.\n"}
+,{"stream_name":"stdout","time":6.165921291,"data":"    103  Fall F, walking, slip\n"}
+,{"stream_name":"stdout","time":6.166062838,"data":"    104  Fall F, walking, slip, rec.\n"}
+,{"stream_name":"stdout","time":6.166095035,"data":"    105  Fall F, walking, slip, rot.\n"}
+,{"stream_name":"stdout","time":6.166101826,"data":"    106  Fall F, walking, slip, rot., rec.\n"}
+,{"stream_name":"stdout","time":6.166106282,"data":"    107  Fall B, walking, slip\n"}
+,{"stream_name":"stdout","time":6.166110813,"data":"    108  Fall B, walking, slip, rec.\n"}
+,{"stream_name":"stdout","time":6.166115835,"data":"    109  Fall B, walking, slip, rot.\n"}
+,{"stream_name":"stdout","time":6.166121466,"data":"    110  Fall B, walking, slip rot., rec.\n"}
+,{"stream_name":"stdout","time":6.166125927,"data":"    111  Fall F, walking, syncope\n"}
+,{"stream_name":"stdout","time":6.166160427,"data":"    112  Fall B, walking, syncope\n"}
+,{"stream_name":"stdout","time":6.166167843,"data":"    113  Fall L, walking, syncope\n"}
+,{"stream_name":"stdout","time":6.166172751,"data":"    114  Fall, syncope, table\n"}
+,{"stream_name":"stdout","time":6.166177091,"data":"    115  Fall F, try sit\n"}
+,{"stream_name":"stdout","time":6.166181711,"data":"    116  Fall F, try sit, rec.\n"}
+,{"stream_name":"stdout","time":6.166186965,"data":"    117  Fall B, try sit\n"}
+,{"stream_name":"stdout","time":6.166191466,"data":"    118  Fall B, try sit, rec.\n"}
+,{"stream_name":"stdout","time":6.1661963459999996,"data":"    119  Fall L, try sit\n"}
+,{"stream_name":"stdout","time":6.166200697,"data":"    120  Fall L, try sit, rec.\n"}
+,{"stream_name":"stdout","time":6.16628646,"data":"    121  Fall F, jog, trip\n"}
+,{"stream_name":"stdout","time":6.166294103,"data":"    122  Fall F, jog, trip, rec.\n"}
+,{"stream_name":"stdout","time":6.166298838,"data":"    123  Fall F, jog, slip\n"}
+,{"stream_name":"stdout","time":6.166303488,"data":"    124  Fall F, jog, slip, rev.\n"}
+,{"stream_name":"stdout","time":6.166307766,"data":"    125  Fall F, jog, slip, rot.\n"}
+,{"stream_name":"stdout","time":6.166312374,"data":"    126  Fall F, jog, slip, rot., rec.\n"}
+,{"stream_name":"stdout","time":6.166316504,"data":"    127  Fall L, bed\n"}
+,{"stream_name":"stdout","time":6.166320357,"data":"    128  Fall L, bed, rec.\n"}
+,{"stream_name":"stdout","time":6.166324315,"data":"    129  Fall F, chair, syncope\n"}
+,{"stream_name":"stdout","time":6.166328137,"data":"    130  Fall B, chair, syncope\n"}
+,{"stream_name":"stdout","time":6.166331909,"data":"    131  Fall L, chair, syncope\n"}
+,{"stream_name":"stdout","time":6.166335741,"data":"    132  Fall F, syncope\n"}
+,{"stream_name":"stdout","time":6.166341827,"data":"    133  Fall B, syncope\n"}
+,{"stream_name":"stdout","time":6.166349883,"data":"    134  Fall L, syncope\n"}
+,{"stream_name":"stdout","time":6.166352695,"data":"    135  Fall, syncope, slide over a wall\n"}
+,{"stream_name":"stdout","time":6.166815663,"data":"\n"}
+,{"stream_name":"stdout","time":6.166833449,"data":"  FALL activity ids (35): [101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135]\n"}
+,{"stream_name":"stdout","time":10.63071215,"data":"  waist trials: 1798   of which falls: 466  ADL: 1332\n"}
+,{"stream_name":"stdout","time":10.630760188,"data":"\n"}
+,{"stream_name":"stdout","time":10.630764985999999,"data":"==============================================================================\n"}
+,{"stream_name":"stdout","time":10.630774448,"data":"Q1. SisFall Enhanced re-alignment -- final sweep with a null control\n"}
+,{"stream_name":"stdout","time":10.630777433,"data":"==============================================================================\n"}
+,{"stream_name":"stderr","time":10.631996996,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":10.632044791,"data":"  File \"/kaggle/src/script.py\", line 133, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":10.63241093,"data":"    yv = np.fromfile(ENHANCED / \"y_val_3\", dtype=np.uint8).reshape(-1, 3)\n"}
+,{"stream_name":"stderr","time":10.632427565,"data":"         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":10.632432419,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/datasets/nvnikhil0001/sisfall-enhanced/y_val_3'\n"}
+,{"stream_name":"stderr","time":13.622042275,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":13.622078213,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":13.979645326,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":13.979693717,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":15.744302691,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":17.280648778,"data":"[NbConvertApp] Writing 332497 bytes to __results__.html\n"}
+]

@@ -12,16 +12,30 @@ Format, confirmed by nb00:
         %f8:95:c7:f3:ba:82; 0; RIGHTPOCKET; lge-LG-H815-5.1
         %C4:BE:84:71:A5:02; 2; WAIST;       SensorTag
 
-A correction to the experimental plan. The plan states that UMAFall's waist channel is
-the 200 Hz smartphone stream. It is not: the header shows the smartphone at
-RIGHTPOCKET, and the WAIST position is a SensorTag, which samples far slower. Since
-the project's own rule -- the one used to exclude UP-Fall -- forbids upsampling to
-reach 50 Hz, the true waist channel cannot be used if its rate is below 50 Hz.
+A correction to the experimental plan, settled by measurement in nb00. The plan states
+that UMAFall's waist channel is the 200 Hz smartphone stream. It is not. nb00 measured
+every sensor in the release:
 
-`load()` therefore reports what it finds and takes `position`/`sensor_id` explicitly,
-so the choice between "use the slow waist sensor", "use the fast pocket sensor at a
-different body position", and "exclude UMAFall as we excluded UP-Fall" is made in
-nb01 on measured rates, and recorded, rather than assumed here.
+    sensor 0  RIGHTPOCKET  smartphone   ~200 Hz
+    sensor 1  CHEST        SensorTag     ~20 Hz
+    sensor 2  WAIST        SensorTag     ~20 Hz
+    sensor 3  WRIST        SensorTag     ~20 Hz
+    sensor 4  ANKLE        SensorTag     ~20 Hz
+
+The true waist channel runs at 20.1 Hz, which cannot be raised to the 50 Hz working
+rate without fabricating signal content. That is precisely the criterion the plan used
+to exclude UP-Fall, and it must apply here too or the exclusion was never principled.
+
+So UMAFall is used at RIGHTPOCKET. The default is deliberate and its cost is stated in
+the paper: fold D therefore measures a combined domain *and* placement shift, not a
+clean waist-to-waist transfer like folds A-C. This makes it the hardest row in the
+table, which suits its role -- it is the never-trained-on, never-tuned stress test,
+reported once. The alternative, dropping UMAFall entirely, would cost the only fourth
+dataset to buy a purity the stress test does not need.
+
+Consequence for E5: the sensor-placement ablation cannot use UMAFall's multi-position
+channels, since they are all 20 Hz. It uses FallAllD instead, which carries Neck,
+Waist and Wrist at 238 Hz.
 """
 
 from __future__ import annotations
@@ -116,8 +130,10 @@ def survey(root: str | Path, n: int = 20) -> pd.DataFrame:
 
 
 def load(root: str | Path, target_hz: int = C.TARGET_HZ,
-         position: str = "WAIST", sensor_id: int | None = None,
+         position: str = "RIGHTPOCKET", sensor_id: int | None = None,
          native_hz: float | None = None, limit: int | None = None) -> list[Trial]:
+    """Load UMAFall trials. See the module docstring for why the default is the
+    pocket smartphone rather than the waist SensorTag."""
     root = Path(root)
     paths = sorted(p for p in root.rglob("*.csv") if FILE_RE.match(p.name))
     if limit:

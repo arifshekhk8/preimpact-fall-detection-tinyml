@@ -75,6 +75,64 @@ The original SisFall is `adityavvvn/sisfall` — pristine `SisFall_dataset/SA01/
 per-trial files plus the `Readme.txt` that carries the unit-conversion formulas the PDF's
 §4.1 step 2 depends on. This is downloaded regardless, as the PDF instructs.
 
+#### D1 resolved — nb00's verdict: tier 3
+
+Three probe rounds settled it. Round 1 matched only 0.8 % of windows, but the 12 it did
+confirm were unambiguously real (correlation 0.995–0.997 at plausible offsets, consistent
+recovered scale of 1 g → 0.2632 Enhanced units). Correlations near 0.996 rather than ~1.0
+say the Enhanced tensors are a *smoothed* version of the originals, so round 2 swept
+low-pass cutoffs — recovery rose monotonically, 0 % unfiltered → 27 % at 5 Hz.
+
+That trend invited filtering harder still, which is exactly where the experiment would
+have started lying to itself: as bandwidth falls, every window converges on every other
+and matches appear by chance. Round 3 therefore swept down to 1 Hz **with a null control**
+— the identical search against time-reversed queries, which cannot have true matches:
+
+| cutoff | real | null | net | recovery |
+|---|---|---|---|---|
+| 5 Hz | 85 | 14 | 71 | **22.5 %** |
+| 4 Hz | 31 | 13 | 18 | 5.7 % |
+| 3 Hz | 15 | 13 | 2 | 0.6 % |
+| 2 Hz | 5 | 3 | 2 | 0.6 % |
+| 1 Hz | 1 | 2 | 0 | 0.0 % |
+
+Recovery *peaks* at 5 Hz and collapses below it as the null rises to meet the signal.
+22.5 % is the ceiling, not a waypoint. **Tier 3 applies**, on evidence rather than on
+giving up:
+
+- original SisFall (25 subjects, filename labels, peak-acceleration impact proxy) stays
+  in E1/E2/E5 on the **post-fall** task, so C1 keeps all four datasets;
+- **KFall alone carries C2.** The PDF already names KFall the more authoritative source
+  (§3.1), so C2 loses corroboration, not its primary evidence.
+
+Additional finding: the available SisFall mirror carries **25 of 38 subjects** — all 23
+young, but only SE06 and SE15 of the 15 older participants. Since SisFall's distinctive
+value is that it includes genuinely older adults, this is a stated limitation, not a
+detail.
+
+#### D5 — UMAFall's waist channel is 20 Hz, so fold D uses the pocket
+
+The PDF states UMAFall's waist channel is the 200 Hz smartphone stream. nb00 measured
+every sensor in the release and it is not:
+
+| sensor | position | device | measured rate |
+|---|---|---|---|
+| 0 | RIGHTPOCKET | smartphone | ~200 Hz |
+| 1–4 | CHEST, **WAIST**, WRIST, ANKLE | SensorTag | **~20 Hz** |
+
+The true waist channel runs at 20.1 Hz. Raising it to 50 Hz would fabricate signal
+content — which is the exact criterion the PDF used to exclude UP-Fall (§3.3), and it has
+to apply here too or that exclusion was never principled.
+
+So UMAFall is used at **RIGHTPOCKET**, and the cost is stated rather than hidden: fold D
+measures a combined domain *and* placement shift, not the clean waist-to-waist transfer
+of folds A–C. That suits its role as the hardest row — never trained on, never tuned,
+reported once. Dropping UMAFall entirely would cost the only fourth dataset to buy a
+purity the stress test does not need.
+
+Knock-on: E5's sensor-placement ablation cannot use UMAFall's multi-position channels
+(all 20 Hz). It uses **FallAllD**, which carries Neck, Waist and Wrist at 238 Hz.
+
 ### D2 — Preprocessing runs on Kaggle, not on the MacBook
 
 The PDF §7 puts preprocessing on the M4 and uploads cached `.npz` to Kaggle. All four raw

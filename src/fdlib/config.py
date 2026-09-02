@@ -74,7 +74,7 @@ REPRESENTATIVE_SAMPLES = 200  # drawn from TRAIN only -- drawing from test leaks
 
 # ---------------------------------------------------------------- Kaggle handles
 KAGGLE_USER = "arifshekh"
-DS_FDLIB = f"{KAGGLE_USER}/fdlib"
+DS_FDLIB = f"{KAGGLE_USER}/fdlib-preimpact-fall"
 DS_WINDOWS = f"{KAGGLE_USER}/fall-windows-50hz"
 
 RAW_SOURCES = {

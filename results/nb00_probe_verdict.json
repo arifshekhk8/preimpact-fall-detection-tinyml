@@ -1,0 +1,460 @@
+{
+  "umafall": {
+    "n_csv": 746,
+    "kinds": {
+      "ADL": 538,
+      "FALL": 208
+    },
+    "n_fall": 208,
+    "rates": [
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_1_2017-04",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2971,
+        "span_s": 14.9,
+        "hz": 199.3
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_1_2017-04",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 300,
+        "span_s": 14.86,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_1_2017-04",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 299,
+        "span_s": 14.85,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_1_2017-04",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 299,
+        "span_s": 14.85,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_1_2017-04",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 299,
+        "span_s": 14.85,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_2_2017-04",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2971,
+        "span_s": 14.87,
+        "hz": 199.8
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_2_2017-04",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 300,
+        "span_s": 14.84,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_2_2017-04",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 300,
+        "span_s": 14.84,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_2_2017-04",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 299,
+        "span_s": 14.8,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_2_2017-04",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 300,
+        "span_s": 14.85,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_3_2017-04",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2972,
+        "span_s": 14.9,
+        "hz": 199.4
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_3_2017-04",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 296,
+        "span_s": 14.74,
+        "hz": 20.0
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_3_2017-04",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 300,
+        "span_s": 14.86,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_3_2017-04",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 300,
+        "span_s": 14.84,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_Aplausing_3_2017-04",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 299,
+        "span_s": 14.84,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2970,
+        "span_s": 14.89,
+        "hz": 199.4
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 301,
+        "span_s": 14.86,
+        "hz": 20.2
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 300,
+        "span_s": 14.97,
+        "hz": 20.0
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 301,
+        "span_s": 14.87,
+        "hz": 20.2
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_1_2017-04-1",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 301,
+        "span_s": 14.87,
+        "hz": 20.2
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2970,
+        "span_s": 14.63,
+        "hz": 202.9
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 300,
+        "span_s": 14.61,
+        "hz": 20.5
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 301,
+        "span_s": 14.96,
+        "hz": 20.0
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 300,
+        "span_s": 14.62,
+        "hz": 20.5
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_2_2017-04-1",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 300,
+        "span_s": 14.62,
+        "hz": 20.5
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2971,
+        "span_s": 14.92,
+        "hz": 199.0
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 301,
+        "span_s": 14.9,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 300,
+        "span_s": 14.9,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 300,
+        "span_s": 14.88,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_01_ADL_HandsUp_3_2017-04-1",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 299,
+        "span_s": 14.89,
+        "hz": 20.0
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_1_201",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2977,
+        "span_s": 14.85,
+        "hz": 200.4
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_1_201",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 300,
+        "span_s": 14.98,
+        "hz": 20.0
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_1_201",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 300,
+        "span_s": 14.84,
+        "hz": 20.2
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_1_201",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 299,
+        "span_s": 14.81,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_1_201",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 298,
+        "span_s": 14.75,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_2_201",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2978,
+        "span_s": 14.91,
+        "hz": 199.7
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_2_201",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 299,
+        "span_s": 14.86,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_2_201",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 299,
+        "span_s": 14.85,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_2_201",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 300,
+        "span_s": 14.88,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_2_201",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 299,
+        "span_s": 14.84,
+        "hz": 20.1
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_3_201",
+        "sid": 0,
+        "pos": "RIGHTPOCKET",
+        "n_acc": 2977,
+        "span_s": 14.64,
+        "hz": 203.3
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_3_201",
+        "sid": 1,
+        "pos": "CHEST",
+        "n_acc": 300,
+        "span_s": 14.59,
+        "hz": 20.5
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_3_201",
+        "sid": 2,
+        "pos": "WAIST",
+        "n_acc": 300,
+        "span_s": 14.63,
+        "hz": 20.4
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_3_201",
+        "sid": 3,
+        "pos": "WRIST",
+        "n_acc": 300,
+        "span_s": 14.62,
+        "hz": 20.5
+      },
+      {
+        "file": "UMAFall_Subject_02_Fall_backwardFall_3_201",
+        "sid": 4,
+        "pos": "ANKLE",
+        "n_acc": 299,
+        "span_s": 14.6,
+        "hz": 20.4
+      }
+    ]
+  },
+  "fallalld_fall_ids": [
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135
+  ],
+  "fallalld_waist": {
+    "trials": 1798,
+    "falls": 466
+  },
+  "alignment": {
+    "grid": [
+      {
+        "cutoff_hz": 5.0,
+        "real": 85,
+        "null": 14,
+        "net": 71,
+        "recovery": 0.2248
+      },
+      {
+        "cutoff_hz": 4.0,
+        "real": 31,
+        "null": 13,
+        "net": 18,
+        "recovery": 0.057
+      },
+      {
+        "cutoff_hz": 3.0,
+        "real": 15,
+        "null": 13,
+        "net": 2,
+        "recovery": 0.0063
+      },
+      {
+        "cutoff_hz": 2.0,
+        "real": 5,
+        "null": 3,
+        "net": 2,
+        "recovery": 0.0063
+      },
+      {
+        "cutoff_hz": 1.0,
+        "real": 1,
+        "null": 2,
+        "net": 0,
+        "recovery": 0.0
+      }
+    ],
+    "best": {
+      "cutoff_hz": 5.0,
+      "real": 85,
+      "null": 14,
+      "net": 71,
+      "recovery": 0.2248
+    },
+    "tier": "3-kfall-only"
+  }
+}
