@@ -1,0 +1,20 @@
+{
+  "id": "arifshekh/fd-nb03-e2",
+  "title": "fd-nb03-e2",
+  "code_file": "nb03_e2.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "arifshekh/fdlib-preimpact-fall"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [
+    "arifshekh/fd-nb01-preprocess"
+  ],
+  "model_sources": []
+}

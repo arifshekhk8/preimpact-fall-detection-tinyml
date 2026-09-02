@@ -53,9 +53,19 @@ def classification_metrics(
 
 
 def macro_f1_3class(y_true: np.ndarray, y_prob: np.ndarray) -> float:
-    """Macro-F1 over {bkg, alert, fall} -- the early-stopping criterion."""
+    """Macro-F1 over the classes actually PRESENT in y_true -- the early-stopping criterion.
+
+    Averaging over all three labels regardless of support silently scores 0 for any
+    absent class. On the post-fall task, where ALERT never occurs, that caps macro-F1
+    at two thirds of its real value and -- far worse -- makes early stopping chase a
+    distorted target. Restricting to observed labels keeps the metric comparable within
+    a task; it is not comparable *across* tasks, which is why the task is recorded in
+    every results row.
+    """
+    y_true = np.asarray(y_true)
     pred = np.asarray(y_prob).argmax(1)
-    return float(f1_score(y_true, pred, average="macro", labels=[0, 1, 2], zero_division=0))
+    labels = sorted(set(np.unique(y_true).tolist()))
+    return float(f1_score(y_true, pred, average="macro", labels=labels, zero_division=0))
 
 
 def per_class_report(y_true: np.ndarray, y_prob: np.ndarray) -> dict[str, dict[str, float]]:

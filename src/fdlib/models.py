@@ -1,8 +1,14 @@
 """Model definitions. The MCU memory budget is the design driver, not an afterthought.
 
-The proposed model targets ~25,000 parameters, which quantises to roughly 25 KB --
-comfortably inside the ESP32's flash and, more importantly, inside a tensor arena
-that leaves room for the rest of the firmware.
+The experimental plan sets a target of ~25,000 parameters and gives the layer widths.
+Those two are not consistent: the architecture exactly as specified -- Conv1D(24, k=7,
+s=2), SeparableConv1D(48, k=5), SeparableConv1D(64, k=3), GAP, Dense(32), Dense(N) --
+comes to **7,947 trainable parameters**, roughly a third of the stated target.
+
+The layer widths are kept and the target is treated as the loose one, because being
+under budget is not a problem to fix: ~8 KB at INT8 sits far inside the 60 KB flash
+budget and leaves the tensor arena generous headroom. The discrepancy is recorded here
+rather than quietly papered over by widening layers to hit a round number.
 
 Two choices carry that budget:
   * separable convolutions, which cut parameter count by roughly an order of
