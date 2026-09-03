@@ -1,27 +1,23 @@
 {
-  "id": "arifshekh/fd-nb05-e5",
-  "id_no": 132970082,
-  "title": "fd-nb05-e5",
-  "code_file": "fd-nb05-e5.py",
+  "id": "arifshekh/fd-nb06-export",
+  "id_no": 132983676,
+  "title": "fd-nb06-export",
+  "code_file": "fd-nb06-export.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": true,
   "enable_gpu": true,
   "enable_tpu": false,
   "enable_internet": false,
-  "keywords": [
-    "gpu"
-  ],
+  "keywords": [],
   "dataset_sources": [
-    "sankalpsinghvishen/derived-fallalld-dataset",
-    "arifshekh/fdlib-preimpact-fall",
-    "adityavvvn/sisfall"
+    "arifshekh/fdlib-preimpact-fall"
   ],
   "kernel_sources": [
     "arifshekh/fd-nb01-preprocess"
   ],
   "competition_sources": [],
   "model_sources": [],
-  "docker_image": "gcr.io/kaggle-private-byod/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "docker_image": "",
   "machine_shape": "NvidiaTeslaT4"
 }
