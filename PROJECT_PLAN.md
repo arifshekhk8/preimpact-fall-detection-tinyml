@@ -438,6 +438,123 @@ highest-leverage unknown, so it is resolved first, before any model is written.
 
 ---
 
+## 10a. Results — what actually came out
+
+All six notebooks ran to completion on Kaggle. Every number below is in `results/`
+with the fold-level CSV that produced it, and `paper/table_*.md` is built from those
+CSVs by script.
+
+### Table I — within-dataset baseline (SisFall, post-fall)
+
+Within-dataset performance is **saturated**, which is the premise C1 depends on.
+
+| Model | Protocol | Params | Sens | Spec | Macro-F1 |
+|---|---|---:|---:|---:|---:|
+| SMV threshold | 5-fold grouped | 2 | 0.763 | 0.934 | 0.484 |
+| SVM | 5-fold grouped | — | 0.958 | 0.997 | **0.977** |
+| Random Forest | 5-fold grouped | — | 0.952 | 0.997 | 0.975 |
+| 1D-CNN | 5-fold grouped | 102,211 | 0.956 | 0.995 | 0.969 |
+| CNN-LSTM | 5-fold grouped | 47,811 | 0.954 | 0.996 | 0.972 |
+| **Proposed** | 5-fold grouped | **7,947** | 0.913 | 0.993 | 0.950 |
+| **Proposed** | **25-fold LOSO** | **7,947** | 0.882 | 0.993 | 0.953 |
+
+The proposed model gives up ~2 points of macro-F1 for a **13× parameter reduction**
+against the 1D-CNN. LOSO sensitivity standard deviation is 0.19 — some subjects are
+markedly harder, worth reporting rather than smoothing into the mean.
+
+### Table II — cross-dataset generalisation (C1, the headline)
+
+| Fold | Test | none | inst-norm | CORAL | DANN | Drop vs Table I |
+|---|---|---:|---:|---:|---:|---:|
+| A | FallAllD | 0.344 | **0.388** | 0.179 | 0.307 | **0.563** |
+| B | KFall | 0.835 | **0.873** | 0.644 | 0.834 | 0.072 |
+| C | SisFall | 0.799 | **0.830** | 0.617 | 0.728 | 0.108 |
+| D | UMAFall | **0.475** | 0.423 | 0.005 | 0.299 | 0.432 |
+
+**The gap is the finding.** It is also highly asymmetric: KFall transfers well
+(0.07), FallAllD barely transfers at all (0.56), despite both being waist-mounted.
+
+The adaptation ladder **inverts the expected ordering**, which is the more useful
+result. Per-window instance normalisation — the cheapest rung, near-free on the MCU —
+is the only method that helps. CORAL hurts on every fold. DANN, the most expensive,
+is worse than doing nothing everywhere. The method that fits on the device is the one
+that works.
+
+### Table III — pre-impact (C2), and the qualification it needs
+
+| Threshold | Mean lead | Median | Pre-impact rate | Sens | Spec | **False alarms/hr** |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.5 | 663 ms | 560 ms | 91.8 % | 0.929 | 0.959 | **293** |
+| 0.7 | 589 ms | 500 ms | 89.2 % | 0.911 | 0.970 | **215** |
+| 0.9 | 449 ms | 360 ms | 80.2 % | 0.865 | 0.986 | **102** |
+
+Pooled over 32 KFall LOSO folds, 2,346 fall trials.
+
+The lead times are good. The false-alarm rates make the device unwearable, and that
+is not a bug — it is arithmetic the specificity column hides. One decision every
+0.5 s is 7,200 per hour, so even 99 % specificity leaves 72 false alarms an hour;
+one per hour needs 0.99986. **Window-level specificity is close to meaningless as a
+deployment metric.**
+
+`results/debounce_analysis.md` measures the two fixes the firmware already has —
+k-consecutive-window agreement and a cooldown — and finds they cannot currently be
+had together with lead time: reaching ~1 false alarm/hour (threshold 0.7, k=4) drops
+pre-impact detection from 91.8 % to 1.1 %. The alarms still fire, just after impact.
+Mean lead of 663 ms is barely longer than one 500 ms stride, so any debouncing
+consumes it. **That indicts the stride, not the model**, and is the clearest piece of
+future work this project produced.
+
+### Table IV — deployment (C3)
+
+| Metric | FP32 | INT8 | ESP32 measured |
+|---|---:|---:|---|
+| Model size | 163.3 KB | **22.54 KB** | `PENDING-HW` |
+| Tensor arena | — | ~8 KB (est.) | `PENDING-HW` |
+| Inference latency | — | — | `PENDING-HW` |
+| Macro-F1 | 0.7014 | **0.7035** | same model |
+| Battery life | — | — | `PENDING-HW` |
+
+Budgets: 22.54 KB against 60 KB, ~8 KB arena against 120 KB, accuracy delta
+**−0.22 points** against a 2-point budget. All met.
+
+**A TinyML finding worth its own line.** Where instance normalisation lives decides
+whether the model survives INT8 quantisation:
+
+| Instance norm | FP32 | INT8 | Drop | FP32/INT8 agreement |
+|---|---:|---:|---:|---:|
+| in the graph | 0.668 | 0.359 | **30.95 pp** | 0.686 |
+| in the pipeline | 0.701 | 0.704 | **−0.22 pp** | **0.994** |
+
+Per-window mean and variance produce intermediate tensors whose dynamic range a
+single global scale per tensor cannot represent. Moving the operation out of the
+graph and into the firmware's float preprocessing removes the problem entirely — and
+it aligns deployment with E2, where per-window instance normalisation was also the
+best domain adaptation. Caught on the desktop by the plan's §9 step 2, before
+anything was flashed.
+
+### E5 — ablations
+
+| Arm | Variant | Binary F1 |
+|---|---|---:|
+| window | 1.0 s | 0.804 |
+| window | 1.5 s | 0.871 |
+| window | **2.0 s** | **0.903** |
+| rate | 25 Hz | 0.884 |
+| rate | **50 Hz** | **0.903** |
+| rate | 100 Hz | 0.910 |
+| channels | accel+gyro | 0.905 |
+| channels | accel only | 0.880 |
+| placement | neck | 0.644 |
+| placement | waist | 0.551 |
+| placement | wrist | 0.476 |
+
+50 Hz is justified on evidence: 100 Hz buys 0.006 F1 for twice the compute. Dropping
+the gyroscope costs 2.6 points and saves its power draw — a real trade. The placement
+arm is FallAllD-internal and not comparable with the rows above, which come from
+SisFall.
+
+---
+
 ## 11. Definition of done
 
 - `results/` holds a CSV for every fold of every experiment, plus `experiment_log.csv`.

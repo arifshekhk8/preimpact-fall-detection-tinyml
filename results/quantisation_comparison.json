@@ -1,0 +1,42 @@
+{
+  "ingraph": {
+    "model_bytes": 24952,
+    "model_kb": 24.37,
+    "fp32_macro_f1": 0.668,
+    "int8_macro_f1": 0.3585,
+    "macro_f1_drop_pp": 30.951,
+    "fp32_sensitivity": 0.8397,
+    "int8_sensitivity": 0.6785,
+    "fp32_specificity": 0.911,
+    "int8_specificity": 0.7074,
+    "agreement": 0.6859701612417421,
+    "within_budget_kb": true,
+    "within_budget_accuracy": false,
+    "variant": "ingraph",
+    "in_graph_instance_norm": true,
+    "params": 7947,
+    "estimated_arena_bytes": 8208,
+    "estimated_arena_kb": 8.0,
+    "keras_kb": 165.7
+  },
+  "pipeline": {
+    "model_bytes": 23080,
+    "model_kb": 22.54,
+    "fp32_macro_f1": 0.7014,
+    "int8_macro_f1": 0.7035,
+    "macro_f1_drop_pp": -0.217,
+    "fp32_sensitivity": 0.8168,
+    "int8_sensitivity": 0.8121,
+    "fp32_specificity": 0.9362,
+    "int8_specificity": 0.9362,
+    "agreement": 0.9944579426115941,
+    "within_budget_kb": true,
+    "within_budget_accuracy": true,
+    "variant": "pipeline",
+    "in_graph_instance_norm": false,
+    "params": 7947,
+    "estimated_arena_bytes": 8208,
+    "estimated_arena_kb": 8.0,
+    "keras_kb": 163.3
+  }
+}

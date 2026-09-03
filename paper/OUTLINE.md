@@ -108,6 +108,6 @@ hedging:
 - [x] Public repository with preprocessing, training and firmware code
 - [x] Frozen normalisation constants published as JSON (and as the C header the
       firmware actually compiles against — same numbers, one generator)
-- [ ] `.tflite` model file released
+- [x] `.tflite` model file released (`results/model.tflite`, 22.5 KB INT8)
 - [x] Exact dataset versions and access dates recorded
 - [x] Random seeds fixed and stated (`config.SEED = 1337`)

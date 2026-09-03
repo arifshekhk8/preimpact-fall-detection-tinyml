@@ -13,7 +13,38 @@ Three contributions:
 | **C3** | Verified TinyML deployment | Table IV — measured latency, RAM and battery on real hardware |
 
 The full execution plan, including every deviation from the original experimental
-design and why, is in [PROJECT_PLAN.md](PROJECT_PLAN.md).
+design and why, is in [PROJECT_PLAN.md](PROJECT_PLAN.md). Full results are in
+[§10a](PROJECT_PLAN.md) and `paper/table_*.md`.
+
+## Headline results
+
+All six notebooks have run to completion on Kaggle.
+
+**C1 — the cross-dataset gap is large and asymmetric.** Within-dataset macro-F1 is
+saturated at 0.95–0.98 for every learned model. Leave-one-dataset-out F1 falls to
+0.34 on FallAllD and 0.84 on KFall — a drop of 0.56 and 0.07 respectively, despite
+both being waist-mounted. The adaptation ladder inverts: per-window instance
+normalisation, the cheapest rung and near-free on the MCU, is the **only** method
+that helps; CORAL hurts everywhere and DANN, the most expensive, is worse than doing
+nothing on all four folds.
+
+**C2 — good lead time, unusable false-alarm rate.** 663 ms mean lead, 91.8 % of
+2,346 fall trials caught before impact. But 293 false alarms per hour at that
+operating point. One decision every 0.5 s is 7,200 per hour, so even 99 % specificity
+leaves 72 — **window-level specificity is close to meaningless as a deployment
+metric**. [`results/debounce_analysis.md`](results/debounce_analysis.md) shows lead
+time and a wearable false-alarm rate cannot currently be had together, and that the
+0.5 s stride, not the model, is what has to change.
+
+**C3 — comfortably inside every budget that can be measured without hardware.**
+22.5 KB INT8 model (budget 60 KB), ~8 KB tensor arena (budget 120 KB), FP32→INT8
+accuracy delta of **−0.22 points** (budget 2). Latency, peak RAM and battery life
+are marked `PENDING-HW`.
+
+A deployment finding along the way: **where instance normalisation lives decides
+whether the model survives INT8 quantisation** — 30.95 points of macro-F1 lost with
+the operation inside the graph, none with it in the pipeline. Caught on the desktop
+before anything was flashed, which is exactly what that verification step is for.
 
 ## What makes this reproducible
 

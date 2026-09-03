@@ -1,0 +1,3 @@
+variant,fp32_macro_f1,int8_macro_f1,drop_pp,fp32_int8_agreement,int8_specificity,model_kb
+ingraph,0.668,0.3585,30.951,0.686,0.7074,24.37
+pipeline,0.7014,0.7035,-0.217,0.9945,0.9362,22.54
