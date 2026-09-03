@@ -1,0 +1,4 @@
+label_source,threshold,mean_lead_ms,std_ms,median_ms,p25_ms,p75_ms,detection_rate,preimpact_rate,sensitivity,specificity,false_alarms_per_hour,n_fall_trials
+KFall (primary),0.5,663.5,478.9,560.0,340.0,860.0,1.0,0.9177,0.9292,0.9593,292.892,2346
+KFall (primary),0.7,588.7,437.7,500.0,280.0,760.0,1.0,0.8917,0.911,0.9701,215.088,2346
+KFall (primary),0.9,448.5,354.7,360.0,220.0,600.0,0.9979,0.8018,0.8652,0.9858,102.236,2346

@@ -125,7 +125,18 @@ def window_dataset(
         edges.append(np.stack([starts + window_len - 1, np.full(len(starts), imp)], 1))
 
     if not X:
-        raise ValueError("no windows produced -- every trial was shorter than one window")
+        # Return an empty corpus with the right keys rather than raising. One ablation
+        # arm producing nothing should be reported and skipped, not kill a notebook
+        # that still has a dozen useful arms to run.
+        empty_f = np.empty((0, window_len, C.N_CHANNELS), np.float32)
+        return {
+            "X": empty_f,
+            "y": np.empty((0,), np.int64),
+            "subject": np.empty((0,), dtype=object),
+            "dataset": np.empty((0,), dtype=object),
+            "trial": np.empty((0,), dtype=object),
+            "edge_impact": np.empty((0, 2), np.int64),
+        }
 
     return {
         "X": np.concatenate(X, 0).astype(np.float32),

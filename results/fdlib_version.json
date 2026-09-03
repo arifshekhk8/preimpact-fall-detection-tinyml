@@ -1,4 +1,4 @@
 {
-  "content_hash": "160479c65b03",
-  "message": "robust csv append across heterogeneous row schemas"
+  "content_hash": "5930feb8f5aa",
+  "message": "window_dataset returns empty instead of raising"
 }

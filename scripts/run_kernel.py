@@ -141,6 +141,8 @@ def push(nb_dir: Path, accelerator: str | None = REQUIRED_ACCELERATOR) -> str:
 
 def status(slug: str) -> str:
     out = sh(["kaggle", "kernels", "status", slug], check=False).lower()
+    if "max retries exceeded" in out or "failed to resolve" in out or "nodename nor servname" in out:
+        raise ConnectionError("kaggle api unreachable")
     for state in ("complete", "error", "cancelrequested", "cancelacknowledged", "running", "queued"):
         if state in out:
             return state
@@ -174,10 +176,32 @@ def try_cancel(slug: str) -> str:
 
 
 def wait(slug: str, timeout: int, poll: int = 45) -> str:
+    """Poll to completion, tolerating transient local network failures.
+
+    The kernel runs on Kaggle and is entirely unaffected by this machine losing DNS
+    or Wi-Fi. An exception here previously killed the poller and left a perfectly
+    healthy finished run un-pulled, so connectivity errors are logged and retried
+    rather than raised. Only a long unbroken outage gives up.
+    """
     started = time.time()
     last = None
+    consecutive_errors = 0
+    max_consecutive_errors = 40  # ~30 min of unbroken failure at the default poll
+
     while time.time() - started < timeout:
-        st = status(slug)
+        try:
+            st = status(slug)
+            consecutive_errors = 0
+        except Exception as e:  # noqa: BLE001
+            consecutive_errors += 1
+            print(f"[{(time.time() - started) / 60:6.1f} min] status check failed "
+                  f"({consecutive_errors}/{max_consecutive_errors}): "
+                  f"{type(e).__name__}. The kernel is unaffected; retrying.", flush=True)
+            if consecutive_errors >= max_consecutive_errors:
+                return "unreachable"
+            time.sleep(poll)
+            continue
+
         if st != last:
             print(f"[{(time.time() - started) / 60:6.1f} min] {slug} -> {st}", flush=True)
             last = st
