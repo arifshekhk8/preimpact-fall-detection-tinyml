@@ -1,17 +1,15 @@
 {
-  "id": "arifshekh/fd-nb02-e1",
-  "id_no": 132944656,
-  "title": "fd-nb02-e1",
-  "code_file": "fd-nb02-e1.py",
+  "id": "arifshekh/fd-nb03-e2",
+  "id_no": 132953729,
+  "title": "fd-nb03-e2",
+  "code_file": "fd-nb03-e2.py",
   "language": "python",
   "kernel_type": "script",
   "is_private": true,
   "enable_gpu": true,
   "enable_tpu": false,
   "enable_internet": false,
-  "keywords": [
-    "gpu"
-  ],
+  "keywords": [],
   "dataset_sources": [
     "arifshekh/fdlib-preimpact-fall"
   ],
@@ -20,6 +18,6 @@
   ],
   "competition_sources": [],
   "model_sources": [],
-  "docker_image": "gcr.io/kaggle-private-byod/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "docker_image": "",
   "machine_shape": "NvidiaTeslaT4"
 }

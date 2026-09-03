@@ -1,0 +1,13 @@
+# Table I — within-dataset baseline
+
+Baselines under 5-fold subject-grouped CV; the proposed model additionally under full leave-one-subject-out. Mean and standard deviation across folds.
+
+|                               |   folds |   params |   sensitivity |   sens_sd |   specificity |   spec_sd |   macro_f1 |   f1_sd |    auc |
+|:------------------------------|--------:|---------:|--------------:|----------:|--------------:|----------:|-----------:|--------:|-------:|
+| ('cnn_1d', 'grouped5')        |       5 |   102211 |        0.9555 |    0.0147 |        0.9951 |    0.0012 |     0.9692 |  0.0023 | 0.9977 |
+| ('cnn_lstm', 'grouped5')      |       5 |    47811 |        0.9541 |    0.0122 |        0.996  |    0.0007 |     0.9722 |  0.0031 | 0.9966 |
+| ('proposed', 'grouped5')      |       5 |     7947 |        0.9134 |    0.0292 |        0.9932 |    0.0021 |     0.9502 |  0.0063 | 0.9953 |
+| ('proposed_loso', 'loso')     |      25 |     7947 |        0.882  |    0.1909 |        0.9931 |    0.0029 |     0.9533 |  0.0199 | 0.996  |
+| ('random_forest', 'grouped5') |       5 |   197156 |        0.9519 |    0.0437 |        0.997  |    0.0005 |     0.975  |  0.0116 | 0.9983 |
+| ('smv_threshold', 'grouped5') |       5 |        2 |        0.7627 |    0.099  |        0.9337 |    0.0093 |     0.4837 |  0.0034 | 0.9601 |
+| ('svm', 'grouped5')           |       5 |        0 |        0.9584 |    0.0184 |        0.997  |    0.0006 |     0.9771 |  0.0061 | 0.9983 |
