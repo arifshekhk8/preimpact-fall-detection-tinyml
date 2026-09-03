@@ -69,22 +69,32 @@ def _cov(x: tf.Tensor) -> tf.Tensor:
 
 # -------------------------------------------------------------------------- DANN
 
-@tf.custom_gradient
-def gradient_reversal(x, lam):
-    def grad(dy):
-        return -lam * dy, None
-    return tf.identity(x), grad
-
-
 class GradientReversal(layers.Layer):
-    """Forward identity, backward sign flip -- the whole trick behind DANN."""
+    """Forward identity, backward sign flip -- the whole trick behind DANN.
+
+    lambda is captured by closure rather than passed as a tensor argument to
+    `tf.custom_gradient`. Passing a Variable as an argument makes TensorFlow expect a
+    gradient for it and the shapes of what must be returned become version-dependent;
+    the closure sidesteps that entirely and keeps lambda assignable from a callback.
+    """
 
     def __init__(self, **kw):
         super().__init__(**kw)
-        self.lam = tf.Variable(0.0, trainable=False, dtype=tf.float32, name="lambda")
+        self.lam = tf.Variable(0.0, trainable=False, dtype=tf.float32, name="grl_lambda")
 
     def call(self, x):
-        return gradient_reversal(x, self.lam)
+        lam = self.lam
+
+        @tf.custom_gradient
+        def _reverse(z):
+            def grad(dy):
+                return -lam * dy
+            return tf.identity(z), grad
+
+        return _reverse(x)
+
+    def compute_output_shape(self, input_shape):
+        return input_shape
 
 
 def build_dann(base: keras.Model, n_domains: int, feature_layer: str = "gap") -> keras.Model:

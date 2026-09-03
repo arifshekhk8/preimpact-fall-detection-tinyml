@@ -120,9 +120,11 @@ def lead_times(
         if not len(hits):
             out.append(np.nan)
             continue
-        order = np.argsort(edges)
-        first = edges[order][np.isin(order, hits)][:1] if False else edges[hits].min()
-        out.append((imp[0] - first) * 1000.0 / hz)
+        # The FIRST alarm, by window right edge -- not the most confident one. A
+        # detector that fires late but confidently has not detected anything
+        # pre-impact, and scoring it on its best window would hide that.
+        first_edge = int(edges[hits].min())
+        out.append((int(imp[0]) - first_edge) * 1000.0 / hz)
     return np.asarray(out, dtype=np.float64)
 
 
