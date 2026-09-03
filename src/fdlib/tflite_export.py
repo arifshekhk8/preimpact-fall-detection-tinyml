@@ -130,17 +130,28 @@ def to_c_array(tflite_path: str | Path, out_path: str | Path,
     return text
 
 
-def estimate_arena_bytes(model) -> int:
-    """Rough tensor-arena estimate, to catch a model that cannot possibly fit.
+def estimate_arena_bytes(model_path: str | Path) -> int:
+    """Rough tensor-arena estimate, read from the converted model's own tensors.
 
-    The authoritative number is the high-water mark reported by TFLite Micro on the
-    device; this only exists so an over-budget architecture is caught before it is
-    flashed rather than after.
+    Derived from the .tflite rather than the Keras graph: `layer.output_shape` does
+    not exist in Keras 3 and silently yielded zero, which put "~0.0 KB" in Table IV.
+
+    The authoritative number is still TFLite Micro's high-water mark on the device.
+    This exists only so an architecture that cannot possibly fit is caught before it
+    is flashed rather than after.
     """
-    total = 0
-    for layer in model.layers:
-        shape = getattr(layer, "output_shape", None)
-        if isinstance(shape, tuple):
-            n = int(np.prod([d for d in shape if d]))
-            total = max(total, n)
-    return int(total * 4 * 2)  # two live buffers, int8 arena still padded to float-ish
+    import tensorflow as tf
+
+    interp = tf.lite.Interpreter(model_path=str(model_path))
+    interp.allocate_tensors()
+    sizes = []
+    for d in interp.get_tensor_details():
+        shape = d.get("shape")
+        if shape is None or not len(shape):
+            continue
+        n = int(np.prod([int(s) for s in shape if int(s) > 0]))
+        itemsize = np.dtype(d["dtype"]).itemsize
+        sizes.append(n * itemsize)
+    sizes.sort(reverse=True)
+    # two largest live buffers plus a working margin
+    return int(sum(sizes[:2]) * 1.5) if sizes else 0
