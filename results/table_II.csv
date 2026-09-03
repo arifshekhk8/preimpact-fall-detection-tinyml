@@ -1,0 +1,5 @@
+lodo_fold,train_datasets,test_dataset,none,instance_norm,coral,dann
+A,kfall+sisfall,fallalld,0.3439,0.3877,0.1793,0.3072
+B,fallalld+sisfall,kfall,0.8348,0.8731,0.6443,0.8344
+C,fallalld+kfall,sisfall,0.7987,0.8299,0.6174,0.7281
+D,fallalld+kfall+sisfall,umafall,0.4745,0.423,0.0054,0.2993
