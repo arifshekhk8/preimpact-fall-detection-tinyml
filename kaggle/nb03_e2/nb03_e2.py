@@ -57,7 +57,7 @@ corpus = load_corpus(CORPUS)
 X, y = corpus["X"], corpus["y"]
 datasets, subjects = corpus["dataset"], corpus["subject"]
 
-print(f"corpus {X.shape}  datasets {sorted(set(datasets))}")
+print(f"corpus {X.shape}  datasets {sorted(str(d) for d in set(datasets))}")
 print(f"proposed params {count_params(proposed_cnn()):,}")
 print(f"preprocess signature {C.preprocess_signature()}")
 
@@ -89,16 +89,23 @@ def train_eval(Xtr, ytr, Xva, yva, Xte, yte, method: str, dom_tr=None, n_dom=2):
     if method == "dann":
         # Rung 3: adversarial. The domain head learns to tell the training datasets
         # apart; gradient reversal makes the trunk unlearn whatever allowed that.
+        # Compiled directly rather than through compile_model: that helper passes
+        # metrics=["accuracy"], and Keras requires a metrics entry per output on a
+        # multi-output model, so routing DANN through it fails at compile time.
+        import tensorflow as tf
+
         base = proposed_cnn()
         model = build_dann(base, n_domains=n_dom)
-        opt_model = compile_model(model, steps_per_epoch=max(1, len(Xtr) // C.BATCH_SIZE),
-                                  epochs=C.MAX_EPOCHS)
-        opt_model.compile(
-            optimizer=opt_model.optimizer,
+        steps = max(1, len(Xtr) // C.BATCH_SIZE)
+        sched = tf.keras.optimizers.schedules.CosineDecay(
+            C.LR, decay_steps=steps * C.MAX_EPOCHS)
+        model.compile(
+            optimizer=tf.keras.optimizers.Adam(learning_rate=sched),
             loss={"head": "sparse_categorical_crossentropy",
                   "domain": "sparse_categorical_crossentropy"},
             loss_weights={"head": 1.0, "domain": 0.3},
         )
+        opt_model = model
         grl = model.get_layer("grl")
         dom_va = np.zeros(len(Xva), np.int64)
         opt_model.fit(
@@ -128,14 +135,15 @@ print("E2 -- leave-one-dataset-out")
 print("=" * 74)
 
 for fold_name, tr, te in lodo_folds(datasets):
-    train_sets = sorted(set(datasets[tr]))
-    test_set = datasets[te][0]
+    # cast away numpy str_ so the CSV carries plain names, not "np.str_(...)"
+    train_sets = sorted(str(d) for d in set(datasets[tr]))
+    test_set = str(datasets[te][0])
     print(f"\nfold {fold_name}: train {train_sets} -> test {test_set}  "
           f"({len(tr):,} / {len(te):,} windows)")
 
     inner_tr, inner_va = inner_val_split(subjects, tr)
     dom_map = {d: i for i, d in enumerate(train_sets)}
-    dom_tr = np.array([dom_map[d] for d in datasets[inner_tr]], np.int64)
+    dom_tr = np.array([dom_map[str(d)] for d in datasets[inner_tr]], np.int64)
 
     for method in METHODS:
         key = f"{fold_name}:{method}"

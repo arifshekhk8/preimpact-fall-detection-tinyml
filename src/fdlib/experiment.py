@@ -52,13 +52,46 @@ def completed_folds(csv_path: Path, model: str) -> set[str]:
 
 
 def append_row(csv_path: Path, row: dict) -> None:
+    """Append one result row, tolerating rows that do not all share a schema.
+
+    Different methods report different diagnostics -- CORAL adds `coral_source_n`,
+    DANN has no `best_val_macro_f1` -- so a header written from the first row alone
+    produces a ragged file that pandas later refuses to parse. That is a miserable way
+    to lose a finished run, so when a new key appears the file is rewritten with the
+    union of all columns. Appending stays the common path, and the write stays
+    crash-safe: results reach disk after every fold, never only at the end.
+    """
     csv_path.parent.mkdir(parents=True, exist_ok=True)
-    new = not csv_path.exists()
-    with csv_path.open("a", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=list(row))
-        if new:
+
+    if not csv_path.exists():
+        with csv_path.open("w", newline="") as fh:
+            w = csv.DictWriter(fh, fieldnames=list(row))
             w.writeheader()
-        w.writerow(row)
+            w.writerow(row)
+        return
+
+    with csv_path.open(newline="") as fh:
+        reader = csv.DictReader(fh)
+        header = list(reader.fieldnames or [])
+        existing = list(reader)
+
+    new_keys = [k for k in row if k not in header]
+    if not new_keys:
+        with csv_path.open("a", newline="") as fh:
+            csv.DictWriter(fh, fieldnames=header).writerow(
+                {k: row.get(k, "") for k in header}
+            )
+        return
+
+    fields = header + new_keys
+    tmp = csv_path.with_suffix(".csv.tmp")
+    with tmp.open("w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=fields)
+        w.writeheader()
+        for r in existing:
+            w.writerow({k: r.get(k, "") for k in fields})
+        w.writerow({k: row.get(k, "") for k in fields})
+    tmp.replace(csv_path)
 
 
 def evaluate(y_true: np.ndarray, y_prob: np.ndarray, extra: dict | None = None) -> dict:

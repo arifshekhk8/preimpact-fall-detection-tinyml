@@ -1,0 +1,73 @@
+[{"stream_name":"stdout","time":21.399236572,"data":"corpus (256037, 100, 6)  datasets [np.str_('fallalld'), np.str_('kfall'), np.str_('sisfall'), np.str_('umafall')]\n"}
+,{"stream_name":"stderr","time":22.875782627,"data":"WARNING: All log messages before absl::InitializeLog() is called are written to STDERR\n"}
+,{"stream_name":"stderr","time":22.875818858,"data":"I0000 00:00:1788398918.519170       7 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13756 MB memory:  -\u003e device: 0, name: Tesla T4, pci bus id: 0000:00:04.0, compute capability: 7.5\n"}
+,{"stream_name":"stderr","time":22.878572825,"data":"I0000 00:00:1788398918.522074       7 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:1 with 13756 MB memory:  -\u003e device: 1, name: Tesla T4, pci bus id: 0000:00:05.0, compute capability: 7.5\n"}
+,{"stream_name":"stdout","time":24.188081495,"data":"proposed params 7,947\n"}
+,{"stream_name":"stdout","time":24.188184486,"data":"preprocess signature 2574e6104c95\n"}
+,{"stream_name":"stdout","time":24.188207783,"data":"\n"}
+,{"stream_name":"stdout","time":24.188213742,"data":"==========================================================================\n"}
+,{"stream_name":"stdout","time":24.188218649,"data":"E2 -- leave-one-dataset-out\n"}
+,{"stream_name":"stdout","time":24.188223246,"data":"==========================================================================\n"}
+,{"stream_name":"stdout","time":24.245840461,"data":"\n"}
+,{"stream_name":"stdout","time":24.245873159,"data":"fold A: train [np.str_('kfall'), np.str_('sisfall')] -\u003e test fallalld  (176,761 / 66,526 windows)\n"}
+,{"stream_name":"stderr","time":33.725698361,"data":"I0000 00:00:1788398929.369029      46 device_compiler.h:196] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.\n"}
+,{"stream_name":"stdout","time":383.617881497,"data":"  none           macro-F1 0.6606  bin-F1 0.3368  sens 0.277  spec 0.989  (359s)\n"}
+,{"stream_name":"stdout","time":707.751867752,"data":"  instance_norm  macro-F1 0.6803  bin-F1 0.3772  sens 0.351  spec 0.985  (324s)\n"}
+,{"stream_name":"stdout","time":986.896206774,"data":"  coral          macro-F1 0.5685  bin-F1 0.1947  sens 0.466  spec 0.905  (279s)\n"}
+,{"stream_name":"stdout","time":989.215473554,"data":"  dann: FAILED ValueError: For a model with multiple outputs, when providing the `metrics` argument as a list, it should have as many entries as the model has outputs. Received:\n"}
+,{"stream_name":"stdout","time":989.215517736,"data":"metrics=['accuracy']\n"}
+,{"stream_name":"stdout","time":989.215549385,"data":"of length 1 whereas the model has 2 outputs.\n"}
+,{"stream_name":"stdout","time":989.269220621,"data":"\n"}
+,{"stream_name":"stdout","time":989.269256052,"data":"fold B: train [np.str_('fallalld'), np.str_('sisfall')] -\u003e test kfall  (180,992 / 62,295 windows)\n"}
+,{"stream_name":"stdout","time":1102.16393676,"data":"  none           macro-F1 0.9033  bin-F1 0.8358  sens 0.838  spec 0.970  (113s)\n"}
+,{"stream_name":"stdout","time":1246.557463721,"data":"  instance_norm  macro-F1 0.9096  bin-F1 0.8460  sens 0.835  spec 0.975  (144s)\n"}
+,{"stream_name":"stdout","time":1463.382253206,"data":"  coral          macro-F1 0.7181  bin-F1 0.5796  sens 0.981  spec 0.752  (217s)\n"}
+,{"stream_name":"stdout","time":1465.786772344,"data":"  dann: FAILED ValueError: For a model with multiple outputs, when providing the `metrics` argument as a list, it should have as many entries as the model has outputs. Received:\n"}
+,{"stream_name":"stdout","time":1465.786809652,"data":"metrics=['accuracy']\n"}
+,{"stream_name":"stdout","time":1465.786815269,"data":"of length 1 whereas the model has 2 outputs.\n"}
+,{"stream_name":"stdout","time":1465.829229786,"data":"\n"}
+,{"stream_name":"stdout","time":1465.829267611,"data":"fold C: train [np.str_('fallalld'), np.str_('kfall')] -\u003e test sisfall  (128,821 / 114,466 windows)\n"}
+,{"stream_name":"stdout","time":1629.219594399,"data":"  none           macro-F1 0.8926  bin-F1 0.7981  sens 0.765  spec 0.990  (163s)\n"}
+,{"stream_name":"stdout","time":1809.816881297,"data":"  instance_norm  macro-F1 0.8972  bin-F1 0.8063  sens 0.742  spec 0.993  (180s)\n"}
+,{"stream_name":"stdout","time":1969.60347072,"data":"  coral          macro-F1 0.7989  bin-F1 0.6254  sens 0.686  spec 0.966  (160s)\n"}
+,{"stream_name":"stdout","time":1971.798366709,"data":"  dann: FAILED ValueError: For a model with multiple outputs, when providing the `metrics` argument as a list, it should have as many entries as the model has outputs. Received:\n"}
+,{"stream_name":"stdout","time":1971.798405442,"data":"metrics=['accuracy']\n"}
+,{"stream_name":"stdout","time":1971.798417163,"data":"of length 1 whereas the model has 2 outputs.\n"}
+,{"stream_name":"stdout","time":1971.878463501,"data":"\n"}
+,{"stream_name":"stdout","time":1971.878497615,"data":"fold D: train [np.str_('fallalld'), np.str_('kfall'), np.str_('sisfall')] -\u003e test umafall  (243,287 / 12,750 windows)\n"}
+,{"stream_name":"stdout","time":2142.77586954,"data":"  none           macro-F1 0.7314  bin-F1 0.4844  sens 0.343  spec 0.996  (171s)\n"}
+,{"stream_name":"stdout","time":2457.721398095,"data":"  instance_norm  macro-F1 0.6910  bin-F1 0.4047  sens 0.262  spec 0.998  (315s)\n"}
+,{"stream_name":"stdout","time":2695.839113639,"data":"  coral          macro-F1 0.4853  bin-F1 0.0000  sens 0.000  spec 1.000  (238s)\n"}
+,{"stream_name":"stdout","time":2698.482015929,"data":"  dann: FAILED ValueError: For a model with multiple outputs, when providing the `metrics` argument as a list, it should have as many entries as the model has outputs. Received:\n"}
+,{"stream_name":"stdout","time":2698.482053933,"data":"metrics=['accuracy']\n"}
+,{"stream_name":"stdout","time":2698.482060341,"data":"of length 1 whereas the model has 2 outputs.\n"}
+,{"stream_name":"stderr","time":2698.484981827,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":2698.485003571,"data":"  File \"/kaggle/src/script.py\", line 173, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":2698.485149445,"data":"    df = pd.read_csv(CSV)\n"}
+,{"stream_name":"stderr","time":2698.485246305,"data":"         ^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":2698.485268291,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/io/parsers/readers.py\", line 1026, in read_csv\n"}
+,{"stream_name":"stderr","time":2698.486585576,"data":"    return _read(filepath_or_buffer, kwds)\n"}
+,{"stream_name":"stderr","time":2698.486750849,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":2698.48676492,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/io/parsers/readers.py\", line 626, in _read\n"}
+,{"stream_name":"stderr","time":2698.48703912,"data":"    return parser.read(nrows)\n"}
+,{"stream_name":"stderr","time":2698.487122003,"data":"           ^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":2698.487130041,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/io/parsers/readers.py\", line 1923, in read\n"}
+,{"stream_name":"stderr","time":2698.487604045,"data":"    ) = self._engine.read(  # type: ignore[attr-defined]\n"}
+,{"stream_name":"stderr","time":2698.487692967,"data":"        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":2698.487730518,"data":"  File \"/usr/local/lib/python3.12/dist-packages/pandas/io/parsers/c_parser_wrapper.py\", line 234, in read\n"}
+,{"stream_name":"stderr","time":2698.488346675,"data":"    chunks = self._reader.read_low_memory(nrows)\n"}
+,{"stream_name":"stderr","time":2698.48843686,"data":"             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":2698.488488565,"data":"  File \"pandas/_libs/parsers.pyx\", line 838, in pandas._libs.parsers.TextReader.read_low_memory\n"}
+,{"stream_name":"stderr","time":2698.494695882,"data":"  File \"pandas/_libs/parsers.pyx\", line 905, in pandas._libs.parsers.TextReader._read_rows\n"}
+,{"stream_name":"stderr","time":2698.494819352,"data":"  File \"pandas/_libs/parsers.pyx\", line 874, in pandas._libs.parsers.TextReader._tokenize_rows\n"}
+,{"stream_name":"stderr","time":2698.494942596,"data":"  File \"pandas/_libs/parsers.pyx\", line 891, in pandas._libs.parsers.TextReader._check_tokenize_status\n"}
+,{"stream_name":"stderr","time":2698.494987414,"data":"  File \"pandas/_libs/parsers.pyx\", line 2061, in pandas._libs.parsers.raise_parser_error\n"}
+,{"stream_name":"stderr","time":2698.495129462,"data":"pandas.errors.ParserError: Error tokenizing data. C error: Expected 35 fields in line 4, saw 36\n"}
+,{"stream_name":"stderr","time":2698.495137786,"data":"\n"}
+,{"stream_name":"stderr","time":2704.033459004,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":2704.033491878,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":2704.239533638,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":2704.239580236,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":2705.402801084,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":2706.178918848,"data":"[NbConvertApp] Writing 313549 bytes to __results__.html\n"}
+]

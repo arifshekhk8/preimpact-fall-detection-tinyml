@@ -1,0 +1,14 @@
+{
+  "_comment": "Fill these from firmware/MEASUREMENT.md, then run: python scripts/build_tables.py. Nulls stay marked PENDING-HW in Table IV.",
+  "inference_latency_ms": null,
+  "arena_high_water_bytes": null,
+  "end_to_end_latency_ms": null,
+  "battery_life_hours": null,
+  "mean_current_ma": null,
+  "n_inferences_averaged": 1000,
+  "board": "ESP32 DevKit V1",
+  "imu": "MPU6050",
+  "battery_mah": 1000,
+  "date": null,
+  "mattress_drop_test_fired": null
+}
