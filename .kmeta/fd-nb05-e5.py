@@ -53,6 +53,28 @@ if SMOKE:
 print(f"proposed params at default config: {count_params(proposed_cnn()):,}")
 print(f"preprocess signature {C.preprocess_signature()}")
 
+# --- preflight -------------------------------------------------------------
+# Unlike the other notebooks, E5 re-windows from the trial level for its window,
+# rate and placement arms, so it needs the RAW datasets attached and not only the
+# cached corpus. A first run of this notebook silently produced zero trials for
+# every rate and lost 25 minutes on the one arm that did not need them. Check up
+# front and fail immediately with a message that names the fix.
+REQUIRED = {
+    "SisFall (window/rate arms)": IN / "adityavvvn" / "sisfall",
+    "FallAllD (placement arm)": IN / "sankalpsinghvishen" / "derived-fallalld-dataset",
+}
+missing = [name for name, p in REQUIRED.items() if not p.exists()]
+if missing:
+    print("\nmounted under /kaggle/input:")
+    for p in sorted(Path("/kaggle/input").rglob("*")):
+        if p.is_dir() and len(p.relative_to("/kaggle/input").parts) <= 3:
+            print("   ", p)
+    raise SystemExit(
+        "missing required raw dataset(s): " + ", ".join(missing) +
+        ". Add them to dataset_sources in kaggle/nb05_e5/kernel-metadata.json."
+    )
+print("preflight: all required raw datasets are mounted")
+
 
 def canonicalise(trials):
     """Apply the same axis correction nb01 applies, so ablations are comparable."""
@@ -69,6 +91,8 @@ def canonicalise(trials):
 
 
 def run_arm(arm: str, variant: str, X, y, subjects, n_channels: int, input_len: int):
+    """Run one ablation arm. A failure here is reported and skipped, never fatal --
+    losing eleven good arms because the twelfth misbehaved is not a trade worth making."""
     key = f"{arm}:{variant}"
     if key in completed_folds(CSV, "proposed"):
         print(f"  {key}: already done")
@@ -76,11 +100,18 @@ def run_arm(arm: str, variant: str, X, y, subjects, n_channels: int, input_len: 
     fn = keras_fit_predict(lambda: proposed_cnn(input_len=input_len, n_channels=n_channels))
     accum = []
     t0 = time.time()
-    for fold_name, tr, te in grouped_folds(subjects, C.GROUPED_CV_SPLITS):
-        from fdlib.cv import inner_val_split
-        itr, iva = inner_val_split(subjects, tr)
-        probs, info = fn(X[itr], y[itr], X[iva], y[iva], X[te])
-        accum.append(evaluate(y[te], probs, info))
+    try:
+        for fold_name, tr, te in grouped_folds(subjects, C.GROUPED_CV_SPLITS):
+            from fdlib.cv import inner_val_split
+            itr, iva = inner_val_split(subjects, tr)
+            probs, info = fn(X[itr], y[itr], X[iva], y[iva], X[te])
+            accum.append(evaluate(y[te], probs, info))
+    except Exception as e:  # noqa: BLE001
+        print(f"  {key}: FAILED {type(e).__name__}: {e}")
+        return
+    if not accum:
+        print(f"  {key}: no folds completed -- skipping")
+        return
     mean = {k: float(np.mean([a[k] for a in accum]))
             for k in accum[0] if isinstance(accum[0][k], (int, float))}
     append_row(CSV, {
@@ -101,18 +132,44 @@ print("\n" + "=" * 74)
 print("E5a/E5b -- window length and sampling rate (SisFall)")
 print("=" * 74)
 
-for hz in C.ABLATION_HZ:
+# Only one lever varies at a time, so enumerate the needed (rate, window) pairs
+# explicitly instead of taking the full cross product and discarding most of it.
+# The previous version windowed every combination before deciding to skip it, which
+# was both wasteful and the reason a skipped combination could crash the notebook.
+PAIRS: list[tuple[int, float, str]] = []
+for w in C.ABLATION_WINDOW_SEC:
+    PAIRS.append((C.TARGET_HZ, w, "window"))
+for h in C.ABLATION_HZ:
+    if h != C.TARGET_HZ:
+        PAIRS.append((h, C.WINDOW_SEC, "rate"))
+
+by_rate: dict[int, list[tuple[float, str]]] = {}
+for h, w, a in PAIRS:
+    by_rate.setdefault(h, []).append((w, a))
+print(f"  arms: {[(h, w, a) for h, w, a in PAIRS]}")
+
+for hz, specs in sorted(by_rate.items()):
+    print(f"\n  loading SisFall at {hz} Hz ...", flush=True)
     trials = canonicalise(sisfall.load(IN / "adityavvvn" / "sisfall", target_hz=hz))
-    for win_sec in C.ABLATION_WINDOW_SEC:
-        wl = int(win_sec * hz)
-        stride = max(1, int(C.STRIDE_SEC * hz))
+    lens = [t.signal.shape[0] for t in trials]
+    print(f"  trials {len(trials)}  signal length min {min(lens) if lens else 0} "
+          f"max {max(lens) if lens else 0}", flush=True)
+    if not trials:
+        print(f"  !! no trials at {hz} Hz -- skipping this rate")
+        continue
+    for win_sec, arm in specs:
+        wl = int(round(win_sec * hz))
+        stride = max(1, int(round(C.STRIDE_SEC * hz)))
         d = window_dataset(trials, task=TASK, window_len=wl, stride=stride)
-        arm = "rate" if win_sec == C.WINDOW_SEC else "window"
-        variant = f"{hz}Hz_{win_sec}s"
-        if win_sec != C.WINDOW_SEC and hz != C.TARGET_HZ:
-            continue  # only vary one lever at a time
-        run_arm(arm, variant, d["X"], d["y"], d["subject"], 6, wl)
+        print(f"  {hz}Hz {win_sec}s -> window_len {wl} stride {stride}: "
+              f"{d['X'].shape[0]} windows", flush=True)
+        if d["X"].shape[0] == 0:
+            print(f"  !! no windows for {hz}Hz_{win_sec}s -- skipping")
+            del d
+            continue
+        run_arm(arm, f"{hz}Hz_{win_sec}s", d["X"], d["y"], d["subject"], 6, wl)
         del d
+    del trials
 
 # ------------------------------------------------ arm 3: accelerometer only
 print("\n" + "=" * 74)

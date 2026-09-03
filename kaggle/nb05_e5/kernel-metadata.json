@@ -10,7 +10,9 @@
   "enable_tpu": false,
   "enable_internet": false,
   "dataset_sources": [
-    "arifshekh/fdlib-preimpact-fall"
+    "arifshekh/fdlib-preimpact-fall",
+    "adityavvvn/sisfall",
+    "sankalpsinghvishen/derived-fallalld-dataset"
   ],
   "competition_sources": [],
   "kernel_sources": [

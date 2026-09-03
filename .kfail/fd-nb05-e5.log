@@ -1,23 +1,25 @@
-[{"stream_name":"stderr","time":22.925613092,"data":"WARNING: All log messages before absl::InitializeLog() is called are written to STDERR\n"}
-,{"stream_name":"stderr","time":22.926252509,"data":"I0000 00:00:1788414356.859940       7 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13756 MB memory:  -\u003e device: 0, name: Tesla T4, pci bus id: 0000:00:04.0, compute capability: 7.5\n"}
-,{"stream_name":"stderr","time":22.928428396,"data":"I0000 00:00:1788414356.862921       7 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:1 with 13756 MB memory:  -\u003e device: 1, name: Tesla T4, pci bus id: 0000:00:05.0, compute capability: 7.5\n"}
-,{"stream_name":"stdout","time":24.423833763,"data":"proposed params at default config: 7,947\n"}
-,{"stream_name":"stdout","time":24.423887887,"data":"preprocess signature 2574e6104c95\n"}
-,{"stream_name":"stdout","time":24.423893149,"data":"\n"}
-,{"stream_name":"stdout","time":24.423896818,"data":"==========================================================================\n"}
-,{"stream_name":"stdout","time":24.423900629,"data":"E5a/E5b -- window length and sampling rate (SisFall)\n"}
-,{"stream_name":"stdout","time":24.423904469,"data":"==========================================================================\n"}
-,{"stream_name":"stderr","time":24.424186118,"data":"Traceback (most recent call last):\n"}
-,{"stream_name":"stderr","time":24.424205515,"data":"  File \"/kaggle/src/script.py\", line 109, in \u003cmodule\u003e\n"}
-,{"stream_name":"stderr","time":24.424360186,"data":"    d = window_dataset(trials, task=TASK, window_len=wl, stride=stride)\n"}
-,{"stream_name":"stderr","time":24.424542098,"data":"        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
-,{"stream_name":"stderr","time":24.424593619,"data":"  File \"/kaggle/input/datasets/arifshekh/fdlib-preimpact-fall/fdlib/windowing.py\", line 128, in window_dataset\n"}
-,{"stream_name":"stderr","time":24.428282238,"data":"    raise ValueError(\"no windows produced -- every trial was shorter than one window\")\n"}
-,{"stream_name":"stderr","time":24.430090352,"data":"ValueError: no windows produced -- every trial was shorter than one window\n"}
-,{"stream_name":"stderr","time":28.5374028,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
-,{"stream_name":"stderr","time":28.537439453,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
-,{"stream_name":"stderr","time":28.780978302,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
-,{"stream_name":"stderr","time":28.781020825,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
-,{"stream_name":"stderr","time":30.124229508,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
-,{"stream_name":"stderr","time":30.984197767,"data":"[NbConvertApp] Writing 308990 bytes to __results__.html\n"}
+[{"stream_name":"stderr","time":35.891953662,"data":"WARNING: All log messages before absl::InitializeLog() is called are written to STDERR\n"}
+,{"stream_name":"stderr","time":35.893100475,"data":"I0000 00:00:1788416400.924281       7 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 13756 MB memory:  -\u003e device: 0, name: Tesla T4, pci bus id: 0000:00:04.0, compute capability: 7.5\n"}
+,{"stream_name":"stderr","time":35.894993435,"data":"I0000 00:00:1788416400.927379       7 gpu_device.cc:2020] Created device /job:localhost/replica:0/task:0/device:GPU:1 with 13756 MB memory:  -\u003e device: 1, name: Tesla T4, pci bus id: 0000:00:05.0, compute capability: 7.5\n"}
+,{"stream_name":"stdout","time":37.406797426,"data":"proposed params at default config: 7,947\n"}
+,{"stream_name":"stdout","time":37.406858939,"data":"preprocess signature 2574e6104c95\n"}
+,{"stream_name":"stdout","time":37.406865636,"data":"\n"}
+,{"stream_name":"stdout","time":37.406869133,"data":"mounted under /kaggle/input:\n"}
+,{"stream_name":"stdout","time":39.462091859,"data":"    /kaggle/input/datasets\n"}
+,{"stream_name":"stdout","time":39.462131488,"data":"    /kaggle/input/datasets/arifshekh\n"}
+,{"stream_name":"stdout","time":39.462257803,"data":"    /kaggle/input/datasets/arifshekh/fdlib-preimpact-fall\n"}
+,{"stream_name":"stdout","time":39.472130401,"data":"    /kaggle/input/derived-fallalld-dataset\n"}
+,{"stream_name":"stdout","time":39.476626458,"data":"    /kaggle/input/notebooks\n"}
+,{"stream_name":"stdout","time":39.476643923,"data":"    /kaggle/input/notebooks/arifshekh\n"}
+,{"stream_name":"stdout","time":39.476739572,"data":"    /kaggle/input/notebooks/arifshekh/fd-nb01-preprocess\n"}
+,{"stream_name":"stdout","time":39.48255199,"data":"    /kaggle/input/sisfall\n"}
+,{"stream_name":"stdout","time":39.482567477,"data":"    /kaggle/input/sisfall/SisFall_dataset\n"}
+,{"stream_name":"stdout","time":39.48265062,"data":"    /kaggle/input/sisfall/SisFall_dataset/SisFall_dataset\n"}
+,{"stream_name":"stderr","time":40.01146404,"data":"missing required raw dataset(s): SisFall (window/rate arms), FallAllD (placement arm). Add them to dataset_sources in kaggle/nb05_e5/kernel-metadata.json.\n"}
+,{"stream_name":"stderr","time":44.239468119,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":44.23950206,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":44.498258453,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":44.498301853,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":46.074771404,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":46.881533288,"data":"[NbConvertApp] Writing 322212 bytes to __results__.html\n"}
 ]

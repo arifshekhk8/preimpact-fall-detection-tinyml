@@ -53,6 +53,28 @@ if SMOKE:
 print(f"proposed params at default config: {count_params(proposed_cnn()):,}")
 print(f"preprocess signature {C.preprocess_signature()}")
 
+# --- preflight -------------------------------------------------------------
+# Unlike the other notebooks, E5 re-windows from the trial level for its window,
+# rate and placement arms, so it needs the RAW datasets attached and not only the
+# cached corpus. A first run of this notebook silently produced zero trials for
+# every rate and lost 25 minutes on the one arm that did not need them. Check up
+# front and fail immediately with a message that names the fix.
+REQUIRED = {
+    "SisFall (window/rate arms)": IN / "adityavvvn" / "sisfall",
+    "FallAllD (placement arm)": IN / "sankalpsinghvishen" / "derived-fallalld-dataset",
+}
+missing = [name for name, p in REQUIRED.items() if not p.exists()]
+if missing:
+    print("\nmounted under /kaggle/input:")
+    for p in sorted(Path("/kaggle/input").rglob("*")):
+        if p.is_dir() and len(p.relative_to("/kaggle/input").parts) <= 3:
+            print("   ", p)
+    raise SystemExit(
+        "missing required raw dataset(s): " + ", ".join(missing) +
+        ". Add them to dataset_sources in kaggle/nb05_e5/kernel-metadata.json."
+    )
+print("preflight: all required raw datasets are mounted")
+
 
 def canonicalise(trials):
     """Apply the same axis correction nb01 applies, so ablations are comparable."""
