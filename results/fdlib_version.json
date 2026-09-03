@@ -1,4 +1,4 @@
 {
-  "content_hash": "5930feb8f5aa",
-  "message": "window_dataset returns empty instead of raising"
+  "content_hash": "9a0775ccd033",
+  "message": "content-based kaggle path resolution"
 }

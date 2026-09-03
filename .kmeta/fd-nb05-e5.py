@@ -54,26 +54,18 @@ print(f"proposed params at default config: {count_params(proposed_cnn()):,}")
 print(f"preprocess signature {C.preprocess_signature()}")
 
 # --- preflight -------------------------------------------------------------
-# Unlike the other notebooks, E5 re-windows from the trial level for its window,
-# rate and placement arms, so it needs the RAW datasets attached and not only the
-# cached corpus. A first run of this notebook silently produced zero trials for
-# every rate and lost 25 minutes on the one arm that did not need them. Check up
-# front and fail immediately with a message that names the fix.
-REQUIRED = {
-    "SisFall (window/rate arms)": IN / "adityavvvn" / "sisfall",
-    "FallAllD (placement arm)": IN / "sankalpsinghvishen" / "derived-fallalld-dataset",
-}
-missing = [name for name, p in REQUIRED.items() if not p.exists()]
-if missing:
-    print("\nmounted under /kaggle/input:")
-    for p in sorted(Path("/kaggle/input").rglob("*")):
-        if p.is_dir() and len(p.relative_to("/kaggle/input").parts) <= 3:
-            print("   ", p)
-    raise SystemExit(
-        "missing required raw dataset(s): " + ", ".join(missing) +
-        ". Add them to dataset_sources in kaggle/nb05_e5/kernel-metadata.json."
-    )
-print("preflight: all required raw datasets are mounted")
+# E5 re-windows from the trial level for its window, rate and placement arms, so it
+# needs the RAW datasets and not only the cached corpus. Roots are resolved by
+# content because Kaggle's mount layout is not stable between kernels -- see
+# fdlib.kaggle_paths. A misconfigured kernel must fail in seconds, not after the
+# first arm has spent twenty-five minutes.
+from fdlib import kaggle_paths as KP  # noqa: E402
+
+SISFALL_ROOT = KP.require("SisFall (window/rate arms)", KP.sisfall_root())
+FALLALLD_ROOT = KP.require("FallAllD (placement arm)", KP.fallalld_root())
+print("preflight: resolved roots")
+for _k, _v in KP.report().items():
+    print(f"   {_k:10s} {_v}")
 
 
 def canonicalise(trials):
@@ -150,7 +142,7 @@ print(f"  arms: {[(h, w, a) for h, w, a in PAIRS]}")
 
 for hz, specs in sorted(by_rate.items()):
     print(f"\n  loading SisFall at {hz} Hz ...", flush=True)
-    trials = canonicalise(sisfall.load(IN / "adityavvvn" / "sisfall", target_hz=hz))
+    trials = canonicalise(sisfall.load(SISFALL_ROOT, target_hz=hz))
     lens = [t.signal.shape[0] for t in trials]
     print(f"  trials {len(trials)}  signal length min {min(lens) if lens else 0} "
           f"max {max(lens) if lens else 0}", flush=True)
@@ -189,8 +181,7 @@ print("=" * 74)
 
 for pos in ("Waist", "Neck", "Wrist"):
     try:
-        tr = canonicalise(fallalld.load(
-            IN / "sankalpsinghvishen" / "derived-fallalld-dataset", device=pos))
+        tr = canonicalise(fallalld.load(FALLALLD_ROOT, device=pos))
         if not tr:
             print(f"  {pos}: no trials"); continue
         d = window_dataset(tr, task=TASK)
