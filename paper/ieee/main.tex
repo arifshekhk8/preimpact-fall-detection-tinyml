@@ -18,7 +18,7 @@
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,calc}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \newcommand{\hwpending}{\textcolor{red}{\textbf{[HW]}}}
@@ -173,15 +173,16 @@ reports accuracy above 99\% that means nothing.
 
 \begin{figure*}[t]
 \centering
-\resizebox{\textwidth}{!}{\input{fig_method}}
-\caption{The deployed system. \textbf{Top:} the on-device pipeline. Sampling is driven
-by a hardware timer rather than a polled delay, because loop jitter accumulates and
-shifts window content away from the training distribution. \textbf{The red boundary is
-the point of the figure:} per-window instance normalisation is performed in float
-\emph{before} quantisation rather than as a layer inside the graph. The two are
-mathematically identical in FP32 and differ by 30.95 points of macro-F1 under INT8
-(Section~\ref{sec:c3}). \textbf{Bottom:} the network. Separable convolutions and
-global average pooling hold the model to 7{,}947 parameters.}
+\input{fig_method}
+\caption{The deployed system. \textbf{(a)} The on-device pipeline, shaded by numeric
+domain. Sampling is hardware-timer driven rather than a polled delay, because loop
+jitter accumulates and shifts window content away from the training distribution.
+Per-window instance normalisation is deliberately placed on the \emph{float} side of
+the quantisation boundary: as a layer inside the graph it is mathematically identical
+but costs 30.95 points of macro-F1 under INT8 (Section~\ref{sec:c3}). \textbf{(b)} The
+network. Separable convolutions and global average pooling hold it to 7{,}947
+parameters; batch normalisation and ReLU follow each convolution, and a flatten in
+place of the pooling would cost 51{,}200 parameters in a single layer.}
 \label{fig:method}
 \end{figure*}
 
