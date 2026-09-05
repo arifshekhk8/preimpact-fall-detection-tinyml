@@ -64,10 +64,23 @@ static const int kStride       = 25;    // 0.5 s
 static const int kChannels     = 6;
 static const int kNumClasses   = 3;     // bkg, alert, fall
 
-// From the E3 operating-point sweep. Trial-level scoring at threshold 0.5 with
-// three-window agreement gave sensitivity 0.985 / specificity 0.991 on KFall.
-static float   gThreshold   = 0.50f;
-static int     gAgreeK      = 3;        // consecutive windows required before firing
+// From nb07's trial-level operating-point sweep on held-out subjects across
+// SisFall + KFall + FallAllD (814 fall trials, 1136 ADL trials).
+//
+// DEFAULT (0.95, k=2): sensitivity 0.886, specificity 0.975, mean lead 302 ms.
+//   Chosen for demo robustness -- a detector that cries wolf while the wearer walks
+//   around is worse than one that is slightly less sensitive.
+//
+// PRE-IMPACT OPTIMAL (0.95, k=1): sensitivity 0.958, specificity 0.836, mean lead
+//   539 ms, and 68 % of detections land BEFORE impact rather than 16 %. This is the
+//   operating point the paper reports for the pre-impact claim. Switch to it live
+//   with `k 1` -- no reflash needed.
+//
+// Requiring k consecutive windows suppresses false alarms but delays the alarm by
+// (k-1) strides, and each stride is 0.5 s. Since mean lead time is under a second,
+// that delay comes straight out of the lead time. This is the central tension.
+static float   gThreshold   = 0.95f;
+static int     gAgreeK      = 2;        // consecutive windows required before firing
 static const uint32_t kCooldownMs   = 5000;
 static const uint32_t kAlarmHoldMs  = 3000;
 

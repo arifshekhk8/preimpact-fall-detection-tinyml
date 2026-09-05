@@ -256,6 +256,33 @@ adaptation everywhere. We report this as measured; the practical reading is that
 expensive alignment does not earn its cost here, and that a practitioner constrained to
 one technique should choose the one that is also free.
 
+\subsection{Pre-impact baselines}
+
+Table~\ref{tab:onebd} repeats the comparison on the task that actually ships. The
+ordering is preserved: the proposed model trails the best comparator by roughly five
+points of macro-F1 while using $1/57$ of Random Forest's node count and $1/13$ of the
+1D-CNN's parameters. The SMV threshold detector, at 0.326, shows how much of this task
+is beyond a hand-tuned rule.
+
+\begin{table}[t]
+\caption{Within-dataset \emph{pre-impact} baselines on KFall, three-class task, 5-fold
+subject-grouped CV.}
+\label{tab:onebd}
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+Model & Params & Sens. & Spec. & Macro-F1 \\
+\midrule
+Random Forest  & 451{,}336 & 0.922 & 0.994 & \textbf{0.920} \\
+SVM            & ---       & 0.935 & 0.987 & 0.914 \\
+1D-CNN         & 102{,}211 & 0.936 & 0.985 & 0.914 \\
+CNN-LSTM       & 47{,}811  & 0.958 & 0.973 & 0.907 \\
+\textbf{Proposed} & \textbf{7{,}947} & 0.936 & 0.959 & 0.874 \\
+SMV threshold  & 2         & 0.737 & 0.911 & 0.326 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Pre-impact detection}
 \label{sec:c2}
 
@@ -353,11 +380,13 @@ allowing both detectors to be compared against identical physical motion.
 \toprule
 Metric & FP32 & INT8 \\
 \midrule
+Parameters             & \multicolumn{2}{c}{7{,}947} \\
 Model size (KB)        & 163.3 & \textbf{22.5} \\
 Tensor arena (KB)      & ---   & \hwpending \\
 Inference latency (ms) & ---   & \hwpending \\
 End-to-end latency (ms)& ---   & \hwpending \\
-Macro-F1 (held out)    & 0.701 & 0.704 \\
+Macro-F1 (held out)    & 0.711 & \textbf{0.714} \\
+FP32/INT8 agreement    & \multicolumn{2}{c}{0.994} \\
 Battery life (h)       & ---   & \hwpending \\
 \bottomrule
 \end{tabular}
@@ -384,6 +413,15 @@ Moving the operation across the quantisation boundary changes a 30.95-point coll
 into no loss at all. The firmware performs the same two-pass computation in float
 before quantising. We report this because the failure is silent: the FP32 model
 validates normally and only the deployed INT8 model misbehaves.
+
+The deployed model is trained on SisFall, KFall and FallAllD; UMAFall is excluded
+because its 200~Hz stream carries no gyroscope, and training on identically zero
+channels would teach the network that a dead sensor is normal. On held-out subjects it
+reaches 0.958 trial-level sensitivity and 0.836 specificity at a mean lead time of
+539~ms, with 68\% of detections preceding impact. Trading sensitivity for specificity
+by requiring two consecutive windows raises specificity to 0.975 but reduces the
+pre-impact fraction to 16\%---the same tension quantified in
+Fig.~\ref{fig:lead}, now visible in the deployed system rather than in simulation.
 
 \section{Discussion and Limitations}
 
