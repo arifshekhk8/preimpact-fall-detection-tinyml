@@ -1,10 +1,12 @@
 %% Pre-Impact Fall Detection on a Low-Cost Microcontroller
 %% IEEE conference format, 6 pages maximum.
 %%
-%% Build:  pdflatex main && bibtex main && pdflatex main && pdflatex main
+%% Build:  tectonic -X compile main.tex
 %%
 %% CELLS MARKED \hwpending ARE NOT YET MEASURED. Fill them from the device
 %% (firmware/MEASUREMENT.md) before submitting. Do not guess them.
+%%
+%% Every numeric claim traces to a file in results/. See VERIFICATION.md.
 
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
@@ -15,6 +17,8 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \newcommand{\hwpending}{\textcolor{red}{\textbf{[HW]}}}
@@ -39,19 +43,19 @@ routinely above 99\%. We show that this figure survives neither a change of data
 nor the constraints of a real device. We train a 7{,}947-parameter separable
 convolutional network for pre-impact fall detection, evaluate it under a strict
 leave-one-dataset-out protocol across SisFall, KFall, FallAllD and UMAFall, and deploy
-it as an INT8 model on an ESP32 costing under BDT 500. Three results follow. First,
-cross-dataset F1 falls from 0.95 within-dataset to between 0.34 and 0.84 depending on
-the target, and the collapse is strongly asymmetric between datasets that appear
+it as a 22.5\,KB INT8 model on an ESP32 costing under BDT~500. Three results follow.
+First, binary F1 falls from 0.907 within-dataset to between 0.344 and 0.835 on an
+unseen corpus, and the collapse is strongly asymmetric between datasets that appear
 equivalent. Second, of three domain-adaptation methods applied in ascending order of
 computational cost, only the cheapest---per-window instance normalisation---improves
 transfer; CORAL and adversarial adaptation both make it worse. Third, where that
-normalisation is placed decides whether the model survives quantisation at all:
-in-graph it costs 30.95 points of macro-F1 under INT8, in the preprocessing pipeline it
-costs none. On KFall the deployed model attains 0.985 trial-level sensitivity and
-0.991 specificity with a mean lead time of 318~ms, comparable to a published ConvLSTM
-benchmark at roughly $1/70$ of its size. We also argue that window-level specificity,
-the metric this literature reports, is close to meaningless for a continuously running
-detector, and report false alarms per hour instead.
+normalisation is placed decides whether the model survives quantisation at all: as a
+network layer it costs 30.95 points of macro-F1 under INT8, moved into the
+preprocessing pipeline it costs nothing. Scored per trial on KFall as in the
+benchmark literature, the model reaches 0.985 sensitivity and 0.991 specificity at a
+mean lead time of 318\,ms. We further argue that window-level specificity, the metric
+this literature reports, is close to meaningless for a continuously running detector,
+and report false alarms per hour instead.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -107,16 +111,16 @@ independent hardware and multiple placements.
 
 \textbf{Pre-impact detection.} Yu \emph{et al.}~\cite{yu2021kfall} benchmark
 threshold, SVM and ConvLSTM models on KFall, the last reaching 99.32\% sensitivity and
-99.01\% specificity with 403$\pm$163~ms lead time. TinyFallNet~\cite{tinyfallnet2023}
-targets constrained devices, reporting 86.67\%/97.97\% and 477.7$\pm$5.8~ms.
-PreFallKD~\cite{prefallkd2023} reports 551.3~ms lead time via knowledge distillation.
+99.01\% specificity with $403\pm163$~ms lead time.
+TinyFallNet~\cite{tinyfallnet2023} targets constrained devices, reporting
+86.67\%/97.97\% and $477.7\pm5.8$~ms. PreFallKD~\cite{prefallkd2023} reports 551.3~ms
+lead time via knowledge distillation.
 
-\textbf{Cross-dataset evaluation.} Silva \emph{et
-al.}~\cite{silva2024crossdataset} evaluate 13 algorithms across 11 repositories and
-find that all degrade under cross-dataset conditions. That the gap exists is therefore
-established; our contribution is not to rediscover it but to ask which mitigations are
-affordable on a microcontroller, and to show that the answer inverts the expected
-ordering.
+\textbf{Cross-dataset evaluation.} Silva \emph{et al.}~\cite{silva2024crossdataset}
+evaluate 13 algorithms across 11 repositories and find that all degrade under
+cross-dataset conditions. That the gap exists is therefore established; our
+contribution is not to rediscover it but to ask which mitigations are affordable on a
+microcontroller, and to show that the answer inverts the expected ordering.
 
 \textbf{MCU deployment.} Torti \emph{et al.}~\cite{torti2019embedding} deploy a
 recurrent network to an embedded platform using the same annotations discussed above.
@@ -124,7 +128,7 @@ recurrent network to an embedded platform using the same annotations discussed a
 \section{Data and Preprocessing}
 \label{sec:data}
 
-\subsection{Corpora and an audit of what they actually contain}
+\subsection{Corpora, and an audit of what they actually contain}
 
 We use four public datasets. Auditing them before modelling produced four findings
 that constrain what can be claimed, and we state them rather than discovering them in
@@ -167,39 +171,49 @@ the passband. Windows are $100\times6$ (2.0~s) at a 0.5~s stride.
 random window split places near-identical windows on both sides of the boundary and
 reports accuracy above 99\% that means nothing.
 
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{\input{fig_method}}
+\caption{The deployed system. \textbf{Top:} the on-device pipeline. Sampling is driven
+by a hardware timer rather than a polled delay, because loop jitter accumulates and
+shifts window content away from the training distribution. \textbf{The red boundary is
+the point of the figure:} per-window instance normalisation is performed in float
+\emph{before} quantisation rather than as a layer inside the graph. The two are
+mathematically identical in FP32 and differ by 30.95 points of macro-F1 under INT8
+(Section~\ref{sec:c3}). \textbf{Bottom:} the network. Separable convolutions and
+global average pooling hold the model to 7{,}947 parameters.}
+\label{fig:method}
+\end{figure*}
+
 \section{Method}
 
-The microcontroller memory budget is the design driver. The network is
-\begin{center}\small
-\texttt{Conv1D(24,k7,s2)} $\rightarrow$ \texttt{SepConv1D(48,k5)} $\rightarrow$
-\texttt{MaxPool(2)} $\rightarrow$ \texttt{SepConv1D(64,k3)} $\rightarrow$
-\texttt{GAP} $\rightarrow$ \texttt{Dense(32)} $\rightarrow$ \texttt{Dense(3)}
-\end{center}
-with batch normalisation and ReLU after each convolution and dropout $0.3$ before the
-head. Separable convolutions and global average pooling rather than flattening keep
-the total at \textbf{7{,}947 parameters}; a flatten at the same widths would cost
-51{,}200 in one layer. The three-class head (background / alert / fall) yields binary
-metrics by merging the latter two.
+The microcontroller memory budget is the design driver. Fig.~\ref{fig:method} shows
+the network and the pipeline it sits in. Batch normalisation and ReLU follow each
+convolution, with dropout $0.3$ before the head. Separable convolutions and global
+average pooling rather than flattening keep the total at \textbf{7{,}947 parameters};
+a flatten at the same widths would cost 51{,}200 in one layer. The three-class head
+(background / alert / fall) yields binary metrics by merging the latter two.
 
-Training uses Adam with cosine decay from $10^{-3}$, batch 128, up to 100 epochs, early
-stopping on validation macro-F1 with patience 15, and class weighting rather than
-oversampling---at 75\% overlap, oversampling duplicates near-identical windows across
-the split boundary.
+Training uses Adam with cosine decay from $10^{-3}$, batch 128, up to 100 epochs,
+early stopping on validation macro-F1 with patience 15, and class weighting rather
+than oversampling---at 75\% overlap, oversampling duplicates near-identical windows
+across the split boundary.
 
 \subsection{Adaptation ladder}
 
 We climb three rungs in ascending order of on-device cost: \textbf{per-window instance
 normalisation} (two passes over 100 samples, negligible on a 240~MHz core);
-\textbf{CORAL}, aligning second-order feature statistics; and \textbf{DANN},
-adversarial adaptation via gradient reversal. None uses target labels at any point.
+\textbf{CORAL}~\cite{sun2016coral}, aligning second-order feature statistics; and
+\textbf{DANN}~\cite{ganin2016dann}, adversarial adaptation via gradient reversal. None
+uses target labels at any point.
 
 \section{Results}
 
 \subsection{Within-dataset performance is saturated}
 
-Table~\ref{tab:one} confirms the premise: every learned model lands between 0.95 and
-0.98 macro-F1. The proposed network gives up roughly two points against the best
-comparator for a thirteen-fold reduction in parameters.
+Table~\ref{tab:one} confirms the premise: every learned model lands between 0.950 and
+0.977 macro-F1. The proposed network gives up roughly two points against the best
+comparator for a thirteen-fold reduction in parameters against the 1D-CNN.
 
 \begin{table}[t]
 \caption{Within-dataset baseline, SisFall, post-fall task. Comparators use 5-fold
@@ -210,9 +224,9 @@ subject-grouped CV; the proposed model additionally uses full 25-fold LOSO.}
 \toprule
 Model & Params & Sens. & Spec. & Macro-F1 \\
 \midrule
-SMV threshold  & 2       & 0.763 & 0.934 & 0.484 \\
-SVM            & ---     & 0.958 & 0.997 & \textbf{0.977} \\
-Random Forest  & ---     & 0.952 & 0.997 & 0.975 \\
+SMV threshold  & 2         & 0.763 & 0.934 & 0.484 \\
+SVM            & ---       & 0.958 & 0.997 & \textbf{0.977} \\
+Random Forest  & ---       & 0.952 & 0.997 & 0.975 \\
 1D-CNN         & 102{,}211 & 0.956 & 0.995 & 0.969 \\
 CNN-LSTM       & 47{,}811  & 0.954 & 0.996 & 0.972 \\
 \textbf{Proposed} & \textbf{7{,}947} & 0.913 & 0.993 & 0.950 \\
@@ -221,16 +235,41 @@ CNN-LSTM       & 47{,}811  & 0.954 & 0.996 & 0.972 \\
 \end{tabular}
 \end{table}
 
+Table~\ref{tab:onebd} repeats the comparison on the task that actually ships. The
+ordering is preserved: the proposed model trails the best comparator by roughly five
+points of macro-F1 while using $1/57$ of Random Forest's node count. The SMV threshold
+detector, at 0.326, shows how much of the pre-impact task is beyond a hand-tuned rule.
+
+\begin{table}[t]
+\caption{Within-dataset \emph{pre-impact} baselines on KFall, three-class task,
+5-fold subject-grouped CV.}
+\label{tab:onebd}
+\centering\small
+\begin{tabular}{lrrrr}
+\toprule
+Model & Params & Sens. & Spec. & Macro-F1 \\
+\midrule
+Random Forest  & 451{,}336 & 0.922 & 0.994 & \textbf{0.920} \\
+SVM            & ---       & 0.935 & 0.987 & 0.914 \\
+1D-CNN         & 102{,}211 & 0.936 & 0.985 & 0.914 \\
+CNN-LSTM       & 47{,}811  & 0.958 & 0.973 & 0.907 \\
+\textbf{Proposed} & \textbf{7{,}947} & 0.936 & 0.959 & 0.874 \\
+SMV threshold  & 2         & 0.737 & 0.911 & 0.326 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Cross-dataset generalisation}
 \label{sec:c1}
 
-Table~\ref{tab:two} is the central result. Performance collapses, and it does so
-asymmetrically: KFall transfers well (0.07 drop) while FallAllD barely transfers at
-all (0.56), despite both being waist-mounted at comparable rates.
+Table~\ref{tab:two} is the central result. Against the proposed model's within-dataset
+binary F1 of 0.907, performance collapses on an unseen corpus, and it does so
+asymmetrically: KFall transfers comparatively well (0.835) while FallAllD barely
+transfers at all (0.344), despite both being waist-mounted at comparable rates.
 
 \begin{table}[t]
-\caption{Leave-one-dataset-out F1. Train on two corpora, test on a third; no
-fine-tuning and no target labels.}
+\caption{Leave-one-dataset-out binary F1. Train on two corpora, test on a third; no
+fine-tuning and no target labels. Within-dataset reference: 0.907.}
 \label{tab:two}
 \centering\small
 \begin{tabular}{llrrrr}
@@ -249,46 +288,35 @@ domain and placement shift.}
 \end{table}
 
 \textbf{The adaptation ladder inverts.} Per-window instance normalisation---the
-cheapest rung and the only one that fits comfortably on the target hardware---is the
-only method that improves transfer, gaining 0.03--0.04 F1 on folds A--C. CORAL degrades
-every fold, collapsing to 0.005 on UMAFall. DANN, the most expensive, is worse than no
-adaptation everywhere. We report this as measured; the practical reading is that
-expensive alignment does not earn its cost here, and that a practitioner constrained to
-one technique should choose the one that is also free.
-
-\subsection{Pre-impact baselines}
-
-Table~\ref{tab:onebd} repeats the comparison on the task that actually ships. The
-ordering is preserved: the proposed model trails the best comparator by roughly five
-points of macro-F1 while using $1/57$ of Random Forest's node count and $1/13$ of the
-1D-CNN's parameters. The SMV threshold detector, at 0.326, shows how much of this task
-is beyond a hand-tuned rule.
-
-\begin{table}[t]
-\caption{Within-dataset \emph{pre-impact} baselines on KFall, three-class task, 5-fold
-subject-grouped CV.}
-\label{tab:onebd}
-\centering\small
-\begin{tabular}{lrrrr}
-\toprule
-Model & Params & Sens. & Spec. & Macro-F1 \\
-\midrule
-Random Forest  & 451{,}336 & 0.922 & 0.994 & \textbf{0.920} \\
-SVM            & ---       & 0.935 & 0.987 & 0.914 \\
-1D-CNN         & 102{,}211 & 0.936 & 0.985 & 0.914 \\
-CNN-LSTM       & 47{,}811  & 0.958 & 0.973 & 0.907 \\
-\textbf{Proposed} & \textbf{7{,}947} & 0.936 & 0.959 & 0.874 \\
-SMV threshold  & 2         & 0.737 & 0.911 & 0.326 \\
-\bottomrule
-\end{tabular}
-\end{table}
+cheapest rung, and the only one that fits comfortably on the target hardware---is the
+only method that improves transfer, gaining 0.031--0.044 F1 on folds A--C. CORAL
+degrades every fold, collapsing to 0.005 on UMAFall. DANN, the most expensive, is
+worse than no adaptation everywhere. We report this as measured; the practical reading
+is that expensive feature alignment does not earn its cost here, and that a
+practitioner constrained to a single technique should choose the one that is also
+free.
 
 \subsection{Pre-impact detection}
 \label{sec:c2}
 
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig_lead_time.png}
+\caption{The central operational trade-off, on KFall pooled over 32 LOSO folds.
+\textbf{(a)} Mean lead time against false alarms per hour of ADL data as the decision
+threshold is swept: every millisecond of lead time is bought with false alarms.
+\textbf{(b)} The lead-time distribution at $\tau{=}0.5$. The dotted line marks a single
+0.5\,s inference stride. Because the mean lead of 663\,ms is barely longer than one
+stride, any $k$-of-$n$ debouncing---the obvious remedy for the false-alarm rate in
+(a)---consumes most of the lead time it is meant to protect. The long right tail also
+means the mean overstates the typical case, which is why we report the distribution
+rather than the mean alone.}
+\label{fig:lead}
+\end{figure*}
+
 \begin{table}[t]
 \caption{Pre-impact performance on KFall, pooled over 32 LOSO folds, scored per trial
-as in~\cite{yu2021kfall}. Published rows are from the cited works.}
+as in~\cite{yu2021kfall}. Published rows are as reported in the cited works.}
 \label{tab:three}
 \centering\small
 \begin{tabular}{lrrr}
@@ -308,20 +336,9 @@ Ours ($\tau{=}0.7$, $k{=}3$) & 0.978 & 0.995 & $342\pm373$ \\
 
 Table~\ref{tab:three} places our model against published benchmarks on the same
 dataset and the same trial-level protocol. We are within a point of the ConvLSTM
-benchmark on sensitivity, match it on specificity, and give up lead time, at 22.5~KB
-against roughly 1.5~MB. Our evaluation pools 32 leave-one-subject-out folds rather
-than using a single held-out split.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\columnwidth]{fig_lead_time.png}
-\caption{Left: mean lead time against false alarms per hour of ADL data, sweeping the
-decision threshold (annotated at 0.5, 0.7, 0.9). Every millisecond of lead time is
-bought with false alarms. Right: the lead-time distribution at $\tau{=}0.5$; the long
-tail means the mean overstates the typical case, which is why we report the
-distribution.}
-\label{fig:lead}
-\end{figure}
+benchmark on sensitivity, match it on specificity, and give up lead time, using 7{,}947
+parameters. Our evaluation pools 32 leave-one-subject-out folds rather than using a
+single held-out split, which is the stricter protocol.
 
 \textbf{Window-level specificity is misleading.} A detector deciding once per 0.5~s
 stride makes 7{,}200 decisions per hour, so 99\% window-level specificity still yields
@@ -329,18 +346,19 @@ stride makes 7{,}200 decisions per hour, so 99\% window-level specificity still 
 produces 293 false alarms per hour at $\tau{=}0.5$. Requiring $k$ consecutive windows
 suppresses these---at $k{=}3$ the trial-level false-positive count falls from 538 to 26
 of 2{,}729 ADL trials---but each additional window costs one 0.5~s stride of lead time,
-and our mean lead of 663~ms at $k{=}1$ is barely longer than a single stride. This
-tension between lead time and false-alarm rate is, we argue, the binding constraint on
-deployable pre-impact detection, and it indicts the stride rather than the model.
+and our mean lead of 663~ms at $k{=}1$ is barely longer than a single stride.
+Fig.~\ref{fig:lead} makes the trade explicit. This tension between lead time and false-alarm rate is, we
+argue, the binding constraint on deployable pre-impact detection, and it indicts the
+stride rather than the model.
 
 \subsection{Ablations}
 
 Window length matters most: 2.0~s reaches 0.903 binary F1 against 0.871 at 1.5~s and
 0.804 at 1.0~s. Sampling at 100~Hz buys only 0.006 F1 over 50~Hz for twice the compute
-and twice the input tensor, so 50~Hz is justified on evidence. Dropping the gyroscope
-costs 2.6 points (0.905 to 0.880) and saves 504 parameters plus the sensor's power
-draw. On FallAllD's three mounting points, neck (0.644) outperforms waist (0.551) and
-wrist (0.476).
+and twice the input tensor, so 50~Hz is justified on evidence rather than convention.
+Dropping the gyroscope costs 2.6 points (0.905 to 0.880) and saves 504 parameters plus
+the sensor's power draw. On FallAllD's three mounting points, neck (0.644) outperforms
+waist (0.551) and wrist (0.476).
 
 \subsection{Prototype system}
 \label{sec:system}
@@ -356,24 +374,17 @@ stage, and a sample-rate divider of 19 giving $1000/(1{+}19)=50$~Hz. The $\pm16$
 range is not optional: impacts routinely exceed 8~g and a clipped peak destroys exactly
 the signal the model depends on.
 
-Sampling is driven by a hardware timer interrupt into a $100\times6$ ring buffer.
-Polling \texttt{millis()} in the main loop, let alone \texttt{delay(20)}, allows jitter
-to accumulate and shifts window content relative to the training distribution. Every
-0.5~s the firmware copies the window, converts to $g$ and deg/s, applies per-window
-instance normalisation in float, quantises using the model's own scale and zero point,
-invokes the interpreter, and fires the buzzer when $k$ consecutive windows exceed the
-threshold.
-
 A rule-based two-stage detector---free-fall below 0.65~g followed by impact above
-2.50~g or rotation above 250~deg/s within 1.5~s---runs on the same live samples, giving
-an on-device instance of the SMV threshold comparator of Table~\ref{tab:one} and
-allowing both detectors to be compared against identical physical motion.
+2.50~g or rotation above 250~deg/s within 1.5~s---runs on the same live samples,
+giving an on-device instance of the SMV threshold comparator of Table~\ref{tab:one}
+and allowing both detectors to be compared against identical physical motion.
 
-\subsection{Deployment}
+\subsection{Deployment and quantisation}
 \label{sec:c3}
 
 \begin{table}[t]
-\caption{Deployment on ESP32 DevKit V1 with MPU6050.}
+\caption{Deployment on ESP32 DevKit V1 with MPU6050. The deployed model is trained on
+SisFall, KFall and FallAllD and evaluated on held-out subjects.}
 \label{tab:four}
 \centering\small
 \begin{tabular}{lrr}
@@ -386,6 +397,7 @@ Tensor arena (KB)      & ---   & \hwpending \\
 Inference latency (ms) & ---   & \hwpending \\
 End-to-end latency (ms)& ---   & \hwpending \\
 Macro-F1 (held out)    & 0.711 & \textbf{0.714} \\
+Sensitivity            & 0.922 & 0.922 \\
 FP32/INT8 agreement    & \multicolumn{2}{c}{0.994} \\
 Battery life (h)       & ---   & \hwpending \\
 \bottomrule
@@ -401,7 +413,7 @@ cannot represent:
 \begin{center}\small
 \begin{tabular}{lrrr}
 \toprule
-Instance norm & FP32 & INT8 & FP32/INT8 agreement \\
+Instance norm & FP32 & INT8 & Agreement \\
 \midrule
 In graph    & 0.668 & 0.359 & 0.686 \\
 In pipeline & 0.701 & \textbf{0.704} & \textbf{0.994} \\
@@ -409,39 +421,42 @@ In pipeline & 0.701 & \textbf{0.704} & \textbf{0.994} \\
 \end{tabular}
 \end{center}
 
-Moving the operation across the quantisation boundary changes a 30.95-point collapse
-into no loss at all. The firmware performs the same two-pass computation in float
-before quantising. We report this because the failure is silent: the FP32 model
-validates normally and only the deployed INT8 model misbehaves.
+Moving the operation across the boundary marked in Fig.~\ref{fig:method} changes a
+30.95-point collapse into no loss at all. The firmware performs the same two-pass
+computation in float before quantising. We report this because the failure is silent:
+the FP32 model validates normally, and only the deployed INT8 model misbehaves.
 
-The deployed model is trained on SisFall, KFall and FallAllD; UMAFall is excluded
-because its 200~Hz stream carries no gyroscope, and training on identically zero
-channels would teach the network that a dead sensor is normal. On held-out subjects it
-reaches 0.958 trial-level sensitivity and 0.836 specificity at a mean lead time of
-539~ms, with 68\% of detections preceding impact. Trading sensitivity for specificity
-by requiring two consecutive windows raises specificity to 0.975 but reduces the
-pre-impact fraction to 16\%---the same tension quantified in
-Fig.~\ref{fig:lead}, now visible in the deployed system rather than in simulation.
+The deployed model excludes UMAFall from training, because its 200~Hz stream carries
+no gyroscope and training on identically zero channels would teach the network that a
+dead sensor is normal. On held-out subjects spanning the three remaining corpora (814
+fall and 1{,}136 ADL trials) it reaches 0.958 trial-level sensitivity and 0.836
+specificity at a mean lead time of $539\pm509$~ms, with 68\% of detections preceding
+impact. Requiring two consecutive windows raises specificity to 0.975 but reduces the
+pre-impact fraction to 16\%---the same tension quantified in Fig.~\ref{fig:lead}, now
+visible in the deployed system rather than in simulation. These figures are lower than
+Table~\ref{tab:three} because that model is trained and tested within KFall alone,
+whereas the deployed model is held to three heterogeneous corpora at once.
 
 \section{Discussion and Limitations}
 
 The cross-dataset gap is not uniform, and its asymmetry is more informative than its
 magnitude. FallAllD resists transfer despite nominally matching the training sources
-on placement, which suggests that sensor hardware and protocol differences dominate
-placement as a source of shift.
+on placement, which suggests that sensor hardware and recording protocol dominate
+placement as sources of shift.
 
 Limitations, stated plainly: falls are simulated by mostly young participants rather
 than real falls by older adults; the available SisFall mirror omits most of its older
 cohort; annotations in every source except KFall were produced without video
-reference; fold~D confounds domain shift with placement and modality; and the
-false-alarm rates reported here come from laboratory ADL recordings, not from
-continuous free-living wear.
+reference; fold~D confounds domain shift with placement and modality; the false-alarm
+rates reported here come from laboratory ADL recordings rather than continuous
+free-living wear; and the hardware cells of Table~\ref{tab:four} remain to be
+measured.
 
 \section{Conclusion}
 
 A 7{,}947-parameter network quantised to 22.5~KB attains pre-impact performance
-comparable to a benchmark roughly seventy times its size, and runs on a
-microcontroller costing under BDT 500. Its within-dataset accuracy does not survive a
+comparable to a substantially larger published benchmark, and runs on a
+microcontroller costing under BDT~500. Its within-dataset accuracy does not survive a
 change of dataset, and of three adaptation methods only the cheapest helps. The
 tension between lead time and false-alarm rate, rather than raw accuracy, is what
 stands between this class of model and a deployable device; shortening the inference

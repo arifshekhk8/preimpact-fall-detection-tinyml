@@ -1,0 +1,59 @@
+% Method / system diagram. Included by main.tex.
+% Two rows: (a) the on-device pipeline with the quantisation boundary marked,
+% (b) the network the "INT8 CNN" block expands into. The boundary is the point of
+% the figure -- Section V-F shows crossing it is worth 30.95 points of macro-F1.
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=0pt,
+  box/.style={draw, rounded corners=1.5pt, minimum height=8mm, align=center,
+              inner xsep=3pt, fill=black!3},
+  net/.style={draw, rounded corners=1.5pt, minimum height=9mm, align=center,
+              inner xsep=3pt, fill=blue!5},
+  intn/.style={draw, rounded corners=1.5pt, minimum height=8mm, align=center,
+              inner xsep=3pt, fill=green!14, very thick},
+  q/.style={draw, rounded corners=1.5pt, minimum height=8mm, align=center,
+              inner xsep=3pt, fill=orange!18},
+  ar/.style={-{Latex[length=1.6mm]}, thick},
+  lbl/.style={font=\tiny\itshape, text=black!65},
+]
+
+% ---------------------------------------------------------------- row (a)
+\node[box] (imu) {MPU6050\\$\pm16$\,g, $\pm2000$\,dps\\50\,Hz timer ISR};
+\node[box, right=4mm of imu] (ring) {ring buffer\\$100\times6$\\stride 0.5\,s};
+\node[box, right=4mm of ring] (unit) {unit conversion\\$g$, deg/s};
+\node[intn, right=4mm of unit] (inorm) {\textbf{per-window}\\\textbf{instance norm}\\\textsc{float32}};
+\node[q, right=7mm of inorm] (quant) {quantise\\scale, zero-pt};
+\node[net, right=4mm of quant] (cnn) {\textbf{INT8 CNN}\\22.5\,KB\\7{,}947 param.};
+\node[box, right=4mm of cnn] (kofn) {$k$-of-$n$ +\\5\,s cooldown};
+\node[box, right=4mm of kofn] (buz) {buzzer\\+ LED};
+
+\foreach \a/\b in {imu/ring, ring/unit, unit/inorm, inorm/quant, quant/cnn, cnn/kofn, kofn/buz}
+  \draw[ar] (\a) -- (\b);
+
+% the quantisation boundary -- the point of the figure
+\coordinate (bmid) at ($(inorm.east)!0.5!(quant.west)$);
+\draw[dashed, very thick, red!75]
+  ($(bmid) + (0,9mm)$) -- ($(bmid) - (0,9mm)$);
+\node[font=\tiny\bfseries, text=red!75, align=center, above]
+  at ($(bmid) + (0,9mm)$) {quantisation boundary};
+\node[lbl, below, align=center, text width=30mm, text=red!75]
+  at ($(bmid) - (0,9mm)$) {normalisation kept on the float side};
+
+% ---------------------------------------------------------------- row (b)
+\node[net, anchor=west] (in) at ($(imu.west) - (0,22mm)$) {input\\$100\times6$};
+\node[net, right=3mm of in] (c1) {Conv1D\\24, k7, s2\\$\to 50\times24$};
+\node[net, right=3mm of c1] (s1) {SepConv1D\\48, k5\\$\to 50\times48$};
+\node[net, right=3mm of s1] (mp) {MaxPool 2\\$\to 25\times48$};
+\node[net, right=3mm of mp] (s2) {SepConv1D\\64, k3\\$\to 25\times64$};
+\node[net, right=3mm of s2] (gap) {GAP\\$\to 64$};
+\node[net, right=3mm of gap] (d1) {Dense 32\\ReLU\\drop 0.3};
+\node[net, right=3mm of d1] (d2) {Dense 3\\softmax\\{\tiny bkg/alert/fall}};
+
+\foreach \a/\b in {in/c1, c1/s1, s1/mp, mp/s2, s2/gap, gap/d1, d1/d2}
+  \draw[ar] (\a) -- (\b);
+
+% brace tying the network row to the CNN block above it
+\draw[densely dotted, black!50] (in.north west) -- ($(cnn.south west) + (0,-0.5mm)$);
+\draw[densely dotted, black!50] (d2.north east) -- ($(cnn.south east) + (0,-0.5mm)$);
+
+\end{tikzpicture}
