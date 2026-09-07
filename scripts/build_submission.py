@@ -40,21 +40,21 @@ OUT = SRC / "CSC471_Final_Assignment_SUBMISSION.docx"
 COURSE_CODE = "CSC 471"
 COURSE_NAME = "Microprocessor Based System"
 INSTRUCTOR = "Dr. Md. Alomgir Hossain"
-INSTRUCTOR_TITLE = "Course Instructor, Department of Computer Science and Engineering"
+INSTRUCTOR_TITLE = "Associate Professor, CSE Department, IUBAT"
 ASSIGNMENT = "Final Assignment"
 SEMESTER = "Summer Semester 2026"
 SECTION = "C"           # rubric covers C, D and E -- set yours
 PROGRAM = "BCSE"
 SUBMISSION_DATE = "08.09.2026"
 
-# Only two members are known from the sample front page. The rest are placeholders
-# and are marked so they cannot be missed.
+# Taken from the Chapter 9 slide deck cover, which lists the actual group.
+# Note: "Md. Mahfuz Rana" on the old sample front page is not in this group.
 MEMBERS = [
     ("Md. Arif Shekh", "23103022"),
-    ("Md. Mahfuz Rana", "23103006"),
-    ("<<MEMBER 3 NAME>>", "<<ID>>"),
-    ("<<MEMBER 4 NAME>>", "<<ID>>"),
-    ("<<MEMBER 5 NAME>>", "<<ID>>"),
+    ("Md. Meherab Hossain Talukder", "23103032"),
+    ("Tasfia Islam Prapty", "23103286"),
+    ("G. M. Imtiaz Dinar", "23103080"),
+    ("Tasnia Chowdhury Toshita", "23103038"),
 ]
 
 
@@ -145,30 +145,32 @@ def build_front_page() -> Path:
     for p in doc.paragraphs[3:]:
         p._element.getparent().remove(p._element)
 
-    para(doc, "", space_after=10)
+    # Wording is chosen so that no content word appears twice on the page:
+    # "Submitted To" / "Prepared By" rather than Submitted To / Submitted By;
+    # "Summer 2026" rather than "Semester: Summer Semester 2026"; and the course
+    # line carries no "Course Name/Course Code" labels at all.
+    para(doc, "", space_after=12)
     para(doc, ASSIGNMENT, size=22, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER,
-         space_after=14)
-    para(doc, f"Course Name: {COURSE_NAME}", size=15, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
-    para(doc, f"Course Code: {COURSE_CODE}", size=15, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
-    para(doc, f"Semester: {SEMESTER}", size=15, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=16)
+         space_after=16)
+    para(doc, f"{COURSE_CODE} \u2014 {COURSE_NAME}", size=15, bold=True,
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=5)
+    para(doc, SEMESTER, size=14, bold=True,
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=20)
 
     para(doc, "Submitted To", size=15, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=5)
     para(doc, INSTRUCTOR, size=15, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=2)
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=3)
     para(doc, INSTRUCTOR_TITLE, size=12,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=18)
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=20)
 
-    para(doc, "Submitted By", size=15, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=8)
+    para(doc, "Prepared By", size=15, bold=True,
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=9)
 
     tbl = doc.add_table(rows=1 + len(MEMBERS), cols=3)
     set_table_borders(tbl)
     tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
-    for j, h in enumerate(["No.", "Name", "Student ID"]):
+    for j, h in enumerate(["No.", "Name", "ID"]):
         cell_text(tbl.rows[0].cells[j], h, size=12, bold=True,
                   align=WD_ALIGN_PARAGRAPH.CENTER)
         set_cell_bg(tbl.rows[0].cells[j], "D9D9D9")
@@ -179,15 +181,15 @@ def build_front_page() -> Path:
         cell_text(row.cells[2], sid, size=12, align=WD_ALIGN_PARAGRAPH.CENTER)
     for row in tbl.rows:
         row.cells[0].width = Inches(0.6)
-        row.cells[1].width = Inches(3.2)
-        row.cells[2].width = Inches(1.8)
+        row.cells[1].width = Inches(3.4)
+        row.cells[2].width = Inches(1.6)
 
-    para(doc, "", space_after=12)
+    para(doc, "", space_after=18)
     para(doc, f"Section: {SECTION}", size=14, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=3)
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
     para(doc, f"Program: {PROGRAM}", size=14, bold=True,
-         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=16)
-    para(doc, f"Date of Submission: {SUBMISSION_DATE}", size=14, bold=True,
+         align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
+    para(doc, f"Date: {SUBMISSION_DATE}", size=14, bold=True,
          align=WD_ALIGN_PARAGRAPH.CENTER, space_after=4)
 
     doc.save(tmp)
@@ -453,38 +455,53 @@ def export_pdf(docx_path: Path) -> Path | None:
 
 
 # ==================================================================== assemble
-def main() -> int:
-    front, kpa, rubric = build_front_page(), build_kpa(), build_rubric()
+FRONT_OUT  = SRC / "1_Front_Page.docx"
+KPA_OUT    = SRC / "2_KPA_Justification.docx"
+RUBRIC_OUT = SRC / "3_Assignment_Rubrics.docx"
 
-    base = Document(front)
-    base.add_page_break()
-    comp = Composer(base)
-    comp.append(Document(SRC / "mp_paper.docx"))
-    comp.append(Document(kpa))
-    comp.append(Document(rubric))
-    comp.save(OUT)
 
-    for t in (front, kpa, rubric):
-        t.unlink(missing_ok=True)
-
-    d = Document(OUT)
-    print(f"wrote {OUT.relative_to(ROOT)}")
-    print(f"  paragraphs {len(d.paragraphs)}  tables {len(d.tables)}  "
-          f"images {len(d.inline_shapes)}")
-    blanks = sum(1 for t in d.tables for r in t.rows for c in r.cells
-                 if not c.text.strip())
-    print(f"  empty table cells remaining: {blanks}")
-
-    pdf = export_pdf(OUT)
+def report(path: Path) -> None:
+    d = Document(path)
+    pdf = export_pdf(path)
+    pages = ""
     if pdf:
         try:
             from pypdf import PdfReader
-            print(f"wrote {pdf.relative_to(ROOT)}  ({len(PdfReader(pdf).pages)} pages)")
+            pages = f", {len(PdfReader(pdf).pages)} pages"
         except ImportError:
-            print(f"wrote {pdf.relative_to(ROOT)}")
+            pass
+    print(f"  {path.name:34s} tables {len(d.tables)}  images "
+          f"{len(d.inline_shapes)}{pages}")
+
+
+def main() -> int:
+    front, kpa, rubric = build_front_page(), build_kpa(), build_rubric()
+    for tmp, dest in ((front, FRONT_OUT), (kpa, KPA_OUT), (rubric, RUBRIC_OUT)):
+        shutil.move(str(tmp), dest)
+
+    print("three separate documents:")
+    for f in (FRONT_OUT, KPA_OUT, RUBRIC_OUT):
+        report(f)
+
+    # The combined document is still produced, since the paper has to be handed in
+    # with the front page attached and the two forms appended.
+    base = Document(FRONT_OUT)
+    base.add_page_break()
+    comp = Composer(base)
+    comp.append(Document(SRC / "mp_paper.docx"))
+    comp.append(Document(KPA_OUT))
+    comp.append(Document(RUBRIC_OUT))
+    comp.save(OUT)
+    print("\ncombined:")
+    report(OUT)
+
+    d = Document(OUT)
+    blanks = sum(1 for t in d.tables for r in t.rows for c in r.cells
+                 if not c.text.strip())
+    print(f"\n  empty table cells (rubric Total row only): {blanks}")
     todo = [n for n, _ in MEMBERS if n.startswith("<<")]
     if todo:
-        print(f"\n  !! {len(todo)} placeholder member rows -- search for '<<'")
+        print(f"  !! {len(todo)} placeholder member rows -- search for '<<'")
     return 0
 
 
