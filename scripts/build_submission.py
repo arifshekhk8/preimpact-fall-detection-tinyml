@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import re
 import shutil
+import subprocess
 from pathlib import Path
 
 from docx import Document
@@ -419,6 +420,38 @@ def build_rubric() -> Path:
     return tmp
 
 
+
+# ================================================================= PDF export
+# Word is not scriptable here, so LibreOffice does the conversion. It renders the
+# paper's figures and both filled forms faithfully -- verified against the source.
+SOFFICE_CANDIDATES = (
+    "/Applications/LibreOffice.app/Contents/MacOS/soffice",
+    "soffice",
+    "libreoffice",
+)
+
+
+def export_pdf(docx_path: Path) -> Path | None:
+    """Convert the assembled document to PDF next to it."""
+    exe = next((c for c in SOFFICE_CANDIDATES
+                if Path(c).exists() or shutil.which(c)), None)
+    if exe is None:
+        print("  (no LibreOffice found -- skipping PDF; open the .docx and "
+              "'Save as PDF' by hand)")
+        return None
+
+    proc = subprocess.run(
+        [exe, "--headless", "--convert-to", "pdf",
+         "--outdir", str(docx_path.parent), str(docx_path)],
+        capture_output=True, text=True, timeout=600,
+    )
+    pdf = docx_path.with_suffix(".pdf")
+    if proc.returncode != 0 or not pdf.exists():
+        print(f"  !! PDF conversion failed: {proc.stdout}{proc.stderr}")
+        return None
+    return pdf
+
+
 # ==================================================================== assemble
 def main() -> int:
     front, kpa, rubric = build_front_page(), build_kpa(), build_rubric()
@@ -441,6 +474,14 @@ def main() -> int:
     blanks = sum(1 for t in d.tables for r in t.rows for c in r.cells
                  if not c.text.strip())
     print(f"  empty table cells remaining: {blanks}")
+
+    pdf = export_pdf(OUT)
+    if pdf:
+        try:
+            from pypdf import PdfReader
+            print(f"wrote {pdf.relative_to(ROOT)}  ({len(PdfReader(pdf).pages)} pages)")
+        except ImportError:
+            print(f"wrote {pdf.relative_to(ROOT)}")
     todo = [n for n, _ in MEMBERS if n.startswith("<<")]
     if todo:
         print(f"\n  !! {len(todo)} placeholder member rows -- search for '<<'")
