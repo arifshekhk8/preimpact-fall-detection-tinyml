@@ -6,3 +6,4 @@ data/
 *.zip
 .DS_Store
 kaggle_out/
+nothing/_tmp_*.docx
