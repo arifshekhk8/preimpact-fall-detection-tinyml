@@ -88,10 +88,12 @@ parameters than the 1D-CNN, 6$\times$ fewer than the CNN-LSTM) are exact and ret
 
 ## Not yet measured
 
-Four cells in Table~V are marked `[HW]` in red and **must not be submitted as-is**:
-tensor arena, inference latency, end-to-end latency, battery life. They require the
-physical device; the procedure is in `firmware/MEASUREMENT.md`. Fill
-`results/hardware_measurements.json`, run `scripts/build_tables.py`, and rebuild.
+Inference latency, the run-time tensor-arena high-water mark, end-to-end latency and
+battery life require the physical device. Rather than ship red `[HW]` placeholders,
+the deployment table now reports only measured quantities, and the paper states
+plainly in Section V-F and in the limitations that these are instrumented but not yet
+collected. The procedure is in `firmware/MEASUREMENT.md`; once measured they can be
+added as a short paragraph or an extra table column.
 
 ## Known softness, disclosed in the paper
 

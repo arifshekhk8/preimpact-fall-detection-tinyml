@@ -3,9 +3,6 @@
 %%
 %% Build:  tectonic -X compile main.tex
 %%
-%% CELLS MARKED \hwpending ARE NOT YET MEASURED. Fill them from the device
-%% (firmware/MEASUREMENT.md) before submitting. Do not guess them.
-%%
 %% Every numeric claim traces to a file in results/. See VERIFICATION.md.
 
 \documentclass[conference]{IEEEtran}
@@ -21,18 +18,41 @@
 \usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
-\newcommand{\hwpending}{\textcolor{red}{\textbf{[HW]}}}
+
+%% Lets a five-author block wrap onto a second row. Not defined in every
+%% IEEEtran release, so it is provided here.
+\makeatletter
+\newcommand{\linebreakand}{%
+  \end{@IEEEauthorhalign}
+  \hfill\mbox{}\par
+  \mbox{}\hfill\begin{@IEEEauthorhalign}
+}
+\makeatother
 
 \begin{document}
 
 \title{Pre-Impact Fall Detection on a Low-Cost Microcontroller:\\
-Cross-Dataset Generalisation and Verified TinyML Deployment}
+Cross-Dataset Generalisation, Domain Adaptation\\ and INT8 Deployment}
 
-\author{\IEEEauthorblockN{Md Arif Shekh}
-\IEEEauthorblockA{\textit{Department of Computer Science and Engineering} \\
-\textit{[Institution]}\\
-Dhaka, Bangladesh \\
-arifshekh.k8@gmail.com}
+% All five authors share one institution, so IEEE's shared-affiliation form is
+% used rather than five side-by-side blocks, which do not fit the column width.
+\author{
+\IEEEauthorblockN{%
+Md. Arif Shekh\IEEEauthorrefmark{1},
+Md. Meherab Hossain Talukder\IEEEauthorrefmark{2},
+Tasfia Islam Prapty\IEEEauthorrefmark{3},\\
+G. M. Imtiaz Dinar\IEEEauthorrefmark{4},
+Tasnia Chowdhury Toshita\IEEEauthorrefmark{5}}
+\IEEEauthorblockA{%
+\textit{Department of Computer Science and Engineering}\\
+\textit{IUBAT---International University of Business Agriculture and Technology}\\
+Dhaka, Bangladesh\\[2pt]
+\IEEEauthorrefmark{1}23103022\quad
+\IEEEauthorrefmark{2}23103032\quad
+\IEEEauthorrefmark{3}23103286\quad
+\IEEEauthorrefmark{4}23103080\quad
+\IEEEauthorrefmark{5}23103038\\[2pt]
+Corresponding author: arifshekh.k8@gmail.com}
 }
 
 \maketitle
@@ -384,23 +404,22 @@ and allowing both detectors to be compared against identical physical motion.
 \label{sec:c3}
 
 \begin{table}[t]
-\caption{Deployment on ESP32 DevKit V1 with MPU6050. The deployed model is trained on
-SisFall, KFall and FallAllD and evaluated on held-out subjects.}
+\caption{Deployed model. Trained on SisFall, KFall and FallAllD; evaluated on
+held-out subjects. Sizes and accuracies are measured; on-device timing is reported
+in the text.}
 \label{tab:four}
 \centering\small
 \begin{tabular}{lrr}
 \toprule
 Metric & FP32 & INT8 \\
 \midrule
-Parameters             & \multicolumn{2}{c}{7{,}947} \\
-Model size (KB)        & 163.3 & \textbf{22.5} \\
-Tensor arena (KB)      & ---   & \hwpending \\
-Inference latency (ms) & ---   & \hwpending \\
-End-to-end latency (ms)& ---   & \hwpending \\
-Macro-F1 (held out)    & 0.711 & \textbf{0.714} \\
-Sensitivity            & 0.922 & 0.922 \\
-FP32/INT8 agreement    & \multicolumn{2}{c}{0.994} \\
-Battery life (h)       & ---   & \hwpending \\
+Parameters                & \multicolumn{2}{c}{7{,}947} \\
+Model size (KB)           & 163.3 & \textbf{22.5} \\
+Tensor arena (KB, est.)   & ---   & 8.0 \\
+Macro-F1 (held out)       & 0.711 & \textbf{0.714} \\
+Sensitivity               & 0.922 & 0.922 \\
+Specificity               & 0.894 & 0.893 \\
+FP32/INT8 agreement       & \multicolumn{2}{c}{0.994} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -438,6 +457,18 @@ visible in the deployed system rather than in simulation. These figures are lowe
 Table~\ref{tab:three} because that model is trained and tested within KFall alone,
 whereas the deployed model is held to three heterogeneous corpora at once.
 
+\textbf{Status of the hardware evaluation.} The prototype is assembled and the
+firmware runs the quantised model on the device, with sampling, normalisation,
+inference and the alarm path implemented as described in Section~\ref{sec:system}.
+The model occupies 22.5~KB of flash against the 4~MB available, and the tensor arena
+is estimated at 8.0~KB from the converted model's tensors, well inside the ESP32's
+320~KB of usable RAM, so the design fits the platform with substantial margin.
+Measured inference latency, the tensor-arena high-water mark reported by TFLite Micro
+at run time, and battery life under continuous inference are instrumented in the
+firmware but are not yet collected over a sufficient number of trials to report, and
+we therefore omit them rather than estimate them. Completing that measurement, and a
+free-living false-alarm study, is the immediate next step.
+
 \section{Discussion and Limitations}
 
 The cross-dataset gap is not uniform, and its asymmetry is more informative than its
@@ -450,8 +481,8 @@ than real falls by older adults; the available SisFall mirror omits most of its 
 cohort; annotations in every source except KFall were produced without video
 reference; fold~D confounds domain shift with placement and modality; the false-alarm
 rates reported here come from laboratory ADL recordings rather than continuous
-free-living wear; and the hardware cells of Table~\ref{tab:four} remain to be
-measured.
+free-living wear; and on-device inference latency, run-time memory and battery life
+are instrumented in the firmware but not yet measured over enough trials to report.
 
 \section{Conclusion}
 
