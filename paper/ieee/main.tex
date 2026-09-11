@@ -9,6 +9,12 @@
 \IEEEoverridecommandlockouts
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
+% IEEE requires Times Roman. IEEEtran does not set it under pdfLaTeX, which
+% otherwise falls back to Latin Modern -- a real format violation. newtxmath must
+% follow amssymb, and \Bbbk is released first because both packages define it.
+\usepackage[T1]{fontenc}
+\let\Bbbk\relax
+\usepackage{newtxtext,newtxmath}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{textcomp}
@@ -423,6 +429,11 @@ FP32/INT8 agreement       & \multicolumn{2}{c}{0.994} \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Table~\ref{tab:four} summarises the deployed model. Quantisation to INT8 reduces it
+from 163.3~KB to 22.5~KB, a factor of 7.3, while macro-F1 on the held-out subjects is
+unchanged to within a third of a point and the two versions agree on 99.4\% of
+windows.
 
 \textbf{Where normalisation lives decides whether quantisation works.} Instance
 normalisation is mathematically identical whether applied as a network layer or in

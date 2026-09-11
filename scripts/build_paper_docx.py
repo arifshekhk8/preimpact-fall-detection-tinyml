@@ -257,7 +257,7 @@ def apply_ieee_layout(raw: Path) -> None:
         head.append(p._element)
         return p
 
-    head_para(TITLE, 20, bold=False, after=10)
+    head_para(TITLE, 24, bold=False, after=10)   # IEEE title size
     marks = "\u002a\u2020\u2021\u00a7\u00b6"
     head_para(", ".join(f"{n}{marks[i]}" for i, (n, _) in enumerate(AUTHORS)),
               11, after=2)
